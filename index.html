@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="description" content="Dunyo bo'ylab unutilmas sayohatlar - Compare tours, discover destinations, and book smarter">
+    <meta name="theme-color" content="#0a4d68">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MVP">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1N1Z1SPFSY"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-1N1Z1SPFSY');
+    </script>
+    
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
+    <!-- Facebook SDK -->
+    <script>
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId: 'YOUR_FACEBOOK_APP_ID', // Replace with your Facebook App ID
+                cookie: true,
+                xfbml: true,
+                version: 'v18.0'
+            });
+        };
+    </script>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+    
+    <!-- PWA Manifest -->
+    <!-- Note: If your server root is ketmon_mvp, change this to "manifest.json" -->
+    <!-- If your server root is the parent directory, keep this as "/manifest.json" -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Icons for different devices -->
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <title>MVP</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation Section -->
+    <section class="navigation-section">
+        <div class="container">
+            <div class="nav-content">
+                <a href="#" class="logo">MVP</a>
+                <!-- Hamburger Menu Button (Mobile Only) -->
+                <button id="hamburgerBtn" class="hamburger-btn" aria-label="Toggle menu" onclick="toggleMobileMenu(event)">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <nav class="desktop-nav">
+                    <ul>
+                        <li><a href="#home" data-text="nav_home">Bosh sahifa</a></li>
+                        <li><a href="#destinations" data-text="nav_destinations">Yo'nalishlar</a></li>
+                        <li><a href="#about" data-text="nav_about">Biz haqimizda</a></li>
+                        <li><a href="#contact" data-text="nav_contact">Aloqa</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <a id="topBarLoginBtn" href="#login" class="header-action-btn" data-text="nav_login">Kirish</a>
+                    <a id="topBarRegisterBtn" href="#register" class="header-action-btn" data-text="nav_register">Ro'yxatdan o'tish</a>
+                    <a id="accountLink" href="profile.html" class="header-action-btn" style="display:none;">Profil</a>
+                    <button id="logoutBtn" class="header-action-btn" style="display:none;" onclick="logout()">Chiqish</button>
+                </div>
+                <!-- User Account Button with Dropdown -->
+                <div class="user-account-selector">
+                    <button type="button" class="user-account-btn" id="userAccountBtn" onclick="toggleUserAccountDropdown(event)" aria-label="User account">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </button>
+                    <div class="user-account-dropdown" id="userAccountDropdown">
+                        <a id="userAccountLoginBtn" href="#login" class="user-account-dropdown-item user-account-dropdown-item-primary" data-text="nav_login" onclick="closeUserAccountDropdown(); return false;">Kirish</a>
+                        <a id="userAccountRegisterBtn" href="#register" class="user-account-dropdown-item user-account-dropdown-item-secondary" data-text="nav_register" onclick="closeUserAccountDropdown(); return false;">Ro'yxatdan o'tish</a>
+                        <a id="userAccountLink" href="profile.html" class="user-account-dropdown-item" style="display:none;" onclick="closeUserAccountDropdown()">Profil</a>
+                        <button id="userAccountLogoutBtn" class="user-account-dropdown-item" style="display:none;" onclick="logout(); closeUserAccountDropdown();">Chiqish</button>
+                    </div>
+                </div>
+                <div class="lang-currency-wrapper">
+                    <div class="lang-selector">
+                        <button type="button" class="lang-btn active" id="langDropdownBtn" onclick="toggleLangDropdown(event)">
+                            <span id="langCurrent">UZ</span>
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 5px; transition: transform 0.3s;" id="langDropdownIcon">
+                                <path d="M2 4l4 4 4-4"/>
+                            </svg>
+                        </button>
+                        <div class="lang-dropdown" id="langDropdown">
+                            <button type="button" class="lang-dropdown-item active" onclick="selectLang('uz', event)">UZ</button>
+                            <button type="button" class="lang-dropdown-item" onclick="selectLang('ru', event)">RU</button>
+                            <button type="button" class="lang-dropdown-item" onclick="selectLang('en', event)">EN</button>
+                        </div>
+                    </div>
+                    <div class="currency-selector">
+                        <button type="button" class="currency-btn active" id="currencyDropdownBtn" onclick="toggleCurrencyDropdown(event)">
+                            <span id="currencyCurrent">SUM</span>
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 5px; transition: transform 0.3s;" id="currencyDropdownIcon">
+                                <path d="M2 4l4 4 4-4"/>
+                            </svg>
+                        </button>
+                        <div class="currency-dropdown" id="currencyDropdown">
+                            <button type="button" class="currency-dropdown-item active" onclick="selectCurrency('sum', event)">SUM</button>
+                            <button type="button" class="currency-dropdown-item" onclick="selectCurrency('usd', event)">USD</button>
+                            <button type="button" class="currency-dropdown-item" onclick="selectCurrency('rub', event)">RUB</button>
+                        </div>
+                    </div>
+                    <button class="theme-toggle-switch header-theme-toggle" id="topBarThemeToggle" aria-label="Toggle theme" title="Tema o'zgartirish">
+                        <div class="theme-toggle-track">
+                            <div class="theme-toggle-thumb">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="5"></circle>
+                                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                </svg>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mobile navigation menu (pop-over for small screens) -->
+    <nav id="mobileNav" class="mobile-nav" aria-hidden="true">
+        <div class="mobile-nav-backdrop" tabindex="-1"></div>
+        <div class="mobile-nav-panel">
+            <ul class="mobile-nav-list">
+                <li><a href="#home" data-text="nav_home" onclick="closeMobileMenu()">Bosh sahifa</a></li>
+                <li><a href="#destinations" data-text="nav_destinations" onclick="closeMobileMenu()">Yo'nalishlar</a></li>
+                <li><a href="#about" data-text="nav_about" onclick="closeMobileMenu()">Biz haqimizda</a></li>
+                <li><a href="#contact" data-text="nav_contact" onclick="closeMobileMenu()">Aloqa</a></li>
+                <li class="mobile-nav-divider"></li>
+                <li><a id="mobileLoginBtn" href="#login" class="mobile-nav-action" data-text="nav_login" onclick="closeMobileMenu()">Kirish</a></li>
+                <li><a id="mobileRegisterBtn" href="#register" class="mobile-nav-action" data-text="nav_register" onclick="closeMobileMenu()">Ro'yxatdan o'tish</a></li>
+                <li><a id="mobileAccountLink" href="profile.html" class="mobile-nav-action" style="display:none;" onclick="closeMobileMenu()">Profil</a></li>
+                <li><button id="mobileLogoutBtn" class="mobile-nav-action" style="display:none;" onclick="logout(); closeMobileMenu();">Chiqish</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Search Section -->
+    <section class="search-section" id="home">
+        <div class="container">
+            <div class="modern-search-box">
+                <div class="search-input-wrapper">
+                    <input 
+                        type="text" 
+                        id="voiceSearchInput" 
+                        class="modern-search-input" 
+                        placeholder="Type your message here..." 
+                        data-placeholder="search_placeholder"
+                    >
+                    <div class="search-actions">
+                        <button 
+                            type="button" 
+                            class="voice-search-btn" 
+                            id="voiceSearchBtn" 
+                            aria-label="Voice search" 
+                            title="Voice search"
+                        >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                <line x1="12" y1="19" x2="12" y2="23"></line>
+                                <line x1="8" y1="23" x2="16" y2="23"></line>
+                            </svg>
+                        </button>
+                        <button 
+                            type="button" 
+                            class="search-submit-icon-btn" 
+                            id="searchIconBtn" 
+                            aria-label="Search" 
+                            title="Search"
+                        >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.35-4.35"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="voice-status" id="voiceStatus" style="display: none;"></div>
+            </div>
+            
+            <!-- More Detailed Search Section -->
+            <button type="button" class="detailed-search-toggle" id="detailedSearchToggle">
+                <span>More detailed information</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="toggle-icon">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </button>
+            
+            <div class="detailed-search-section" id="detailedSearchSection" style="display: none;">
+                <div class="detailed-search-grid">
+                    <div class="detailed-search-field">
+                        <label for="searchDate" data-text="search_date">Sana</label>
+                        <input type="date" id="searchDate" class="detailed-input">
+                    </div>
+                    <div class="detailed-search-field">
+                        <label for="searchDuration" data-text="search_duration">Davomiyligi</label>
+                        <select id="searchDuration" class="detailed-input">
+                            <option value="" data-text="duration_select">Tanlang</option>
+                            <option value="3" data-text="duration_3">3 kun</option>
+                            <option value="7" data-text="duration_7">7 kun</option>
+                            <option value="14" data-text="duration_14">14 kun</option>
+                            <option value="custom" data-text="duration_custom">Boshqa</option>
+                        </select>
+                    </div>
+                    <div class="detailed-search-field">
+                        <label for="searchAgency" data-text="search_agency">Agentlik</label>
+                        <select id="searchAgency" class="detailed-input">
+                            <option value="all" data-text="agency_select_all">Barcha agentliklar</option>
+                            <option value="atlas" data-text="agency_atlas_name">Atlas Travel</option>
+                            <option value="samarqand" data-text="agency_samarqand_name">Samarqand Tours</option>
+                            <option value="nomad" data-text="agency_nomad_name">Nomad Explorer</option>
+                            <option value="silk" data-text="agency_silk_name">Silk Road Elite</option>
+                            <option value="azialux" data-text="agency_azialux_name">AziaLux Travel</option>
+                            <option value="clubtravel" data-text="agency_clubtravel_name">ClubTravel UZ</option>
+                            <option value="globalvoyage" data-text="agency_globalvoyage_name">Global Voyage Hub</option>
+                        </select>
+                    </div>
+                    <div class="detailed-search-field">
+                        <label for="searchGuests" data-text="search_guests">Odamlar soni</label>
+                        <select id="searchGuests" class="detailed-input">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3-5">3-5</option>
+                            <option value="6+">6+</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="button" class="search-submit-btn" id="detailedSearchBtn" data-text="search_btn">Qidirish</button>
+            </div>
+        </div>
+    </section>
+    <!-- Destinations -->
+    <section class="destinations" id="destinations">
+        <div class="container">
+            <div class="section-header">
+                <button type="button" class="section-title destinations-title-btn" onclick="showAllDestinations()" data-text="destinations_title" style="background: none; border: none; cursor: pointer; padding: 0; text-align: center; width: 100%;">Mashhur Yo'nalishlar</button>
+                <p class="section-subtitle" data-text="destinations_subtitle">Eng yaxshi takliflarimiz</p>
+            </div>
+            <div class="destination-grid-wrapper">
+                <div class="destination-grid">
+                <div class="destination-card" data-agency="atlas" data-type="local">
+                    <div class="destination-img">
+                        <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=1200&auto=format&fit=crop" alt="Dubai skyline and city view">
+                        <div class="destination-badge" data-text="badge_popular">Mashhur</div>
+                    </div>
+                    <div class="destination-info">
+                        <h3 class="destination-title" data-text="dest1_name">Dubay, BAA</h3>
+                        <p class="destination-desc" data-text="dest1_desc">Zamonaviy arxitektura va qadimiy an'analarning ajoyib uyg'unligi</p>
+                        <div class="destination-footer">
+                            <div>
+                                <div class="price">$1,200</div>
+                                <div class="price-label" data-text="price_per_person">kishi uchun</div>
+                            </div>
+                            <span class="agency-tag" data-text="agency_atlas_name">Atlas Travel</span>
+                        </div>
+                        <a href="#home" class="destination-book-btn cta-btn" data-text="nav_book">Bron qilish</a>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-agency="samarqand" data-type="local">
+                    <div class="destination-img">
+                        <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=1200&auto=format&fit=crop" alt="Paris Eiffel Tower">
+                        <div class="destination-badge" data-text="badge_sale">Chegirma</div>
+                    </div>
+                    <div class="destination-info">
+                        <h3 class="destination-title" data-text="dest2_name">Parij, Fransiya</h3>
+                        <p class="destination-desc" data-text="dest2_desc">Sevgi va romantika poytaxti, go'zal arxitektura</p>
+                        <div class="destination-footer">
+                            <div>
+                                <div class="price">$1,500</div>
+                                <div class="price-label" data-text="price_per_person">kishi uchun</div>
+                            </div>
+                            <span class="agency-tag" data-text="agency_samarqand_name">Samarqand Tours</span>
+                        </div>
+                        <a href="#home" class="destination-book-btn cta-btn" data-text="nav_book">Bron qilish</a>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-agency="nomad" data-type="local">
+                    <div class="destination-img">
+                        <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?q=80&w=1200&auto=format&fit=crop" alt="Istanbul Bosphorus and mosque">
+                        <div class="destination-badge" data-text="badge_new">Yangi</div>
+                    </div>
+                    <div class="destination-info">
+                        <h3 class="destination-title" data-text="dest3_name">Istanbul, Turkiya</h3>
+                        <p class="destination-desc" data-text="dest3_desc">Sharq va G'arb madaniyatining ajoyib qo'shilishi</p>
+                        <div class="destination-footer">
+                            <div>
+                                <div class="price">$800</div>
+                                <div class="price-label" data-text="price_per_person">kishi uchun</div>
+                            </div>
+                            <span class="agency-tag" data-text="agency_nomad_name">Nomad Explorer</span>
+                        </div>
+                        <a href="#home" class="destination-book-btn cta-btn" data-text="nav_book">Bron qilish</a>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-agency="silk" data-type="international">
+                    <div class="destination-img">
+                        <img src="https://images.unsplash.com/photo-1504194104404-433180773017?q=80&w=1200&auto=format&fit=crop" alt="Switzerland Alps mountain landscape">
+                    </div>
+                    <div class="destination-info">
+                        <h3 class="destination-title" data-text="dest4_name">Shveysariya</h3>
+                        <p class="destination-desc" data-text="dest4_desc">Alp tog'lari va kristal toza ko'llar</p>
+                        <div class="destination-footer">
+                            <div>
+                                <div class="price">$2,000</div>
+                                <div class="price-label" data-text="price_per_person">kishi uchun</div>
+                            </div>
+                            <span class="agency-tag" data-text="agency_silk_name">Silk Road Elite</span>
+                        </div>
+                        <a href="#home" class="destination-book-btn cta-btn" data-text="nav_book">Bron qilish</a>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-agency="atlas" data-type="local">
+                    <div class="destination-img">
+                        <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?q=80&w=1200&auto=format&fit=crop" alt="Tokyo city with nature scenery">
+                    </div>
+                    <div class="destination-info">
+                        <h3 class="destination-title" data-text="dest5_name">Tokio, Yaponiya</h3>
+                        <p class="destination-desc" data-text="dest5_desc">Texnologiya va an'analarning noyob uyg'unligi</p>
+                        <div class="destination-footer">
+                            <div>
+                                <div class="price">$1,800</div>
+                                <div class="price-label" data-text="price_per_person">kishi uchun</div>
+                            </div>
+                            <span class="agency-tag" data-text="agency_atlas_name">Atlas Travel</span>
+                        </div>
+                        <a href="#home" class="destination-book-btn cta-btn" data-text="nav_book">Bron qilish</a>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-agency="samarqand" data-type="local">
+                    <div class="destination-img">
+                        <img src="https://images.unsplash.com/photo-1531572753322-ad063cecc140?q=80&w=1200&auto=format&fit=crop" alt="Rome historical architecture">
+                    </div>
+                    <div class="destination-info">
+                        <h3 class="destination-title" data-text="dest6_name">Rim, Italiya</h3>
+                        <p class="destination-desc" data-text="dest6_desc">Qadimiy tarix va ajoyib arxitektura</p>
+                        <div class="destination-footer">
+                            <div>
+                                <div class="price">$1,400</div>
+                                <div class="price-label" data-text="price_per_person">kishi uchun</div>
+                            </div>
+                            <span class="agency-tag" data-text="agency_samarqand_name">Samarqand Tours</span>
+                        </div>
+                        <a href="#home" class="destination-book-btn cta-btn" data-text="nav_book">Bron qilish</a>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-agency="azialux" data-type="international">
+                    <div class="destination-img">
+                        <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=1200&q=80" alt="Bangkok night markets">
+                        <div class="destination-badge" data-text="badge_popular">Mashhur</div>
+                    </div>
+                    <div class="destination-info">
+                        <h3 class="destination-title" data-text="dest7_name">Bangkok Gourmet, Tailand</h3>
+                        <p class="destination-desc" data-text="dest7_desc">Gastro sayohatlar, Michelin restoranlari va shaxsiy gidlar.</p>
+                        <div class="destination-footer">
+                            <div>
+                                <div class="price">$1,650</div>
+                                <div class="price-label" data-text="price_per_person">kishi uchun</div>
+                            </div>
+                            <span class="agency-tag" data-text="agency_azialux_name">AziaLux Travel</span>
+                        </div>
+                        <a href="#home" class="destination-book-btn cta-btn" data-text="nav_book">Bron qilish</a>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-agency="clubtravel" data-type="local">
+                    <div class="destination-img">
+                        <img src="https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=1200&q=80" alt="Baku evening skyline">
+                        <div class="destination-badge" data-text="badge_sale">Chegirma</div>
+                    </div>
+                    <div class="destination-info">
+                        <h3 class="destination-title" data-text="dest9_name">Boku Weekend, Ozarbayjon</h3>
+                        <p class="destination-desc" data-text="dest9_desc">Toshkentdan to'g'ridan-to'g'ri reys, 4* mehmonxona va shahar sayohati.</p>
+                        <div class="destination-footer">
+                            <div>
+                                <div class="price">$690</div>
+                                <div class="price-label" data-text="price_per_person">kishi uchun</div>
+                            </div>
+                            <span class="agency-tag" data-text="agency_clubtravel_name">ClubTravel UZ</span>
+                        </div>
+                        <a href="#home" class="destination-book-btn cta-btn" data-text="nav_book">Bron qilish</a>
+                    </div>
+                </div>
+
+                <div class="destination-card" data-agency="globalvoyage" data-type="international">
+                    <div class="destination-img">
+                        <img src="https://images.unsplash.com/photo-1521295121783-8a321d551ad2?auto=format&fit=crop&w=1200&q=80" alt="London business skyline">
+                        <div class="destination-badge" data-text="badge_new">Yangi</div>
+                    </div>
+                    <div class="destination-info">
+                        <h3 class="destination-title" data-text="dest8_name">London Summit, Buyuk Britaniya</h3>
+                        <p class="destination-desc" data-text="dest8_desc">Biznes konferensiya paketi, premium mehmonxona va transferlar.</p>
+                        <div class="destination-footer">
+                            <div>
+                                <div class="price">$2,450</div>
+                                <div class="price-label" data-text="price_per_person">kishi uchun</div>
+                            </div>
+                            <span class="agency-tag" data-text="agency_globalvoyage_name">Global Voyage Hub</span>
+                        </div>
+                        <a href="#home" class="destination-book-btn cta-btn" data-text="nav_book">Bron qilish</a>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Assistant Section -->
+    <section class="ai-assistant" id="ai">
+        <div class="container">
+            <div class="ai-card">
+                <div class="ai-header">
+                    <span class="ai-icon">🤖</span>
+                    <div>
+                        <h3 data-text="ai_assistant_title">Smart AI yordamchi</h3>
+                        <p data-text="ai_assistant_subtitle">Budjetingiz, yo'nalishingiz va sanalarga qarab mos tur paketlarni tavsiya qiladi.</p>
+                    </div>
+                </div>
+                <form class="ai-form" id="aiForm">
+                    <div class="ai-field">
+                        <label for="aiBudget" data-text="ai_budget_label">Budjet (USD)</label>
+                        <input type="number" id="aiBudget" placeholder="1500" data-placeholder="ai_budget_placeholder" min="100">
+                    </div>
+                    <div class="ai-field">
+                        <label for="aiDestination" data-text="ai_destination_label">Qiziqqan yo'nalish</label>
+                        <input type="text" id="aiDestination" placeholder="Osiyo, Yevropa..." data-placeholder="ai_destination_placeholder">
+                    </div>
+                    <div class="ai-field season-month-row">
+                        <div class="ai-field">
+                            <label for="aiSeason" data-text="ai_season_label">Qaysi fasllar</label>
+                            <select id="aiSeason">
+                                <option value="summer" data-text="ai_season_summer">Yoz</option>
+                                <option value="autumn" data-text="ai_season_autumn">Kuz</option>
+                                <option value="winter" data-text="ai_season_winter">Qish</option>
+                                <option value="spring" data-text="ai_season_spring">Bahor</option>
+                            </select>
+                        </div>
+                        <div class="ai-field" id="aiMonthField" style="display: none;">
+                            <label for="aiMonth" data-text="ai_month_label">Oy</label>
+                            <select id="aiMonth">
+                                <option value="" data-text="ai_month_select">Tanlang</option>
+                                <option value="january" data-text="ai_month_january">Yanvar</option>
+                                <option value="february" data-text="ai_month_february">Fevral</option>
+                                <option value="march" data-text="ai_month_march">Mart</option>
+                                <option value="april" data-text="ai_month_april">Aprel</option>
+                                <option value="may" data-text="ai_month_may">May</option>
+                                <option value="june" data-text="ai_month_june">Iyun</option>
+                                <option value="july" data-text="ai_month_july">Iyul</option>
+                                <option value="august" data-text="ai_month_august">Avgust</option>
+                                <option value="september" data-text="ai_month_september">Sentabr</option>
+                                <option value="october" data-text="ai_month_october">Oktabr</option>
+                                <option value="november" data-text="ai_month_november">Noyabr</option>
+                                <option value="december" data-text="ai_month_december">Dekabr</option>
+                            </select>
+                        </div>
+                        <!-- Mobile menu toggle — placed here so it's grouped with language/currency on small screens -->
+                        <button id="mobileMenuToggle" class="header-action-btn mobile-toggle" aria-label="Open menu" style="display:none;">≡</button>
+                    </div>
+                    <button type="submit" class="btn-gradient ai-submit" data-text="ai_generate_btn">Tavsiyalarni ko'rish</button>
+                </form>
+                <div class="ai-response" id="aiResponse" data-text="ai_response_placeholder">Savolingizni kiriting va AI yordamchidan tavsiyalar oling.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partner Agencies -->
+    <section class="agency-section" id="agencies">
+        <div class="container">
+            <div class="section-header">
+                <button type="button" class="section-title agencies-title-btn" onclick="showAllAgencies()" data-text="agency_section_title" style="background: none; border: none; cursor: pointer; padding: 0; text-align: center; width: 100%;">Hamkor Agentliklar</button>
+                <p class="section-subtitle" data-text="agency_section_subtitle">Eng ishonchli sayohat hamkorlarini tanlang</p>
+            </div>
+            <div class="agency-toolbar">
+                <button type="button" class="active" data-filter="all" data-text="agency_filter_all">Barcha hamkorlar</button>
+                <button type="button" data-filter="local" data-text="agency_filter_local">O'zbek sayyohlari uchun</button>
+                <button type="button" data-filter="international" data-text="agency_filter_global">Xorijiy sayyohlar uchun</button>
+            </div>
+            <div class="agency-grid-wrapper">
+                <div class="agency-grid">
+                <div class="agency-card" data-agency="atlas" data-type="local">
+                    <div class="agency-flair"></div>
+                    <button type="button" class="agency-badge" onclick="showLicense('atlas')" data-text="agency_badge_verified">★ <span data-text="agency_badge_verified">Tasdiqlangan</span></button>
+                    <h3 data-text="agency_atlas_name">Atlas Travel</h3>
+                    <p data-text="agency_atlas_desc">Markaziy Osiyodan dunyoning 40+ manziliga premium paketlar va VIP xizmatlar.</p>
+                    <div class="cta">
+                        <span data-text="agency_view_tours">Agentlik turlarini ko'rish</span>
+                        <span>→</span>
+                    </div>
+                </div>
+                <div class="agency-card" data-agency="samarqand" data-type="local">
+                    <div class="agency-flair"></div>
+                    <button type="button" class="agency-badge" onclick="showLicense('samarqand')" data-text="agency_badge_verified">★ <span data-text="agency_badge_verified">Tasdiqlangan</span></button>
+                    <h3 data-text="agency_samarqand_name">Samarqand Tours</h3>
+                    <p data-text="agency_samarqand_desc">Madaniy sayohatlar, tarixiy gidlar va mahalliy tajribalar bo'yicha mutaxassis.</p>
+                    <div class="cta">
+                        <span data-text="agency_view_tours">Agentlik turlarini ko'rish</span>
+                        <span>→</span>
+                    </div>
+                </div>
+                <div class="agency-card" data-agency="nomad" data-type="local">
+                    <div class="agency-flair"></div>
+                    <button type="button" class="agency-badge" onclick="showLicense('nomad')" data-text="agency_badge_verified">★ <span data-text="agency_badge_verified">Tasdiqlangan</span></button>
+                    <h3 data-text="agency_nomad_name">Nomad Explorer</h3>
+                    <p data-text="agency_nomad_desc">Aktiv sayohatlar, tog' yurishlari va ekologik turizm bo'yicha mutaxassis.</p>
+                    <div class="cta">
+                        <span data-text="agency_view_tours">Agentlik turlarini ko'rish</span>
+                        <span>→</span>
+                    </div>
+                </div>
+                <div class="agency-card" data-agency="clubtravel" data-type="local">
+                    <div class="agency-flair"></div>
+                    <button type="button" class="agency-badge" onclick="showLicense('clubtravel')" data-text="agency_badge_verified">★ <span data-text="agency_badge_verified">Tasdiqlangan</span></button>
+                    <h3 data-text="agency_clubtravel_name">ClubTravel UZ</h3>
+                    <p data-text="agency_clubtravel_desc">Oila va guruhlar uchun hamyonbop paketlar, Toshkentdan charter reyslar.</p>
+                    <div class="cta">
+                        <span data-text="agency_view_tours">Agentlik turlarini ko'rish</span>
+                        <span>→</span>
+                    </div>
+                </div>
+                <div class="agency-card" data-agency="silk" data-type="international">
+                    <div class="agency-flair"></div>
+                    <button type="button" class="agency-badge" onclick="showLicense('silk')" data-text="agency_badge_verified">★ <span data-text="agency_badge_verified">Tasdiqlangan</span></button>
+                    <h3 data-text="agency_silk_name">Silk Road Elite</h3>
+                    <p data-text="agency_silk_desc">Luks mehmonxonalar, TNPL rejalar va shaxsiy gidlar bilan premium xizmat.</p>
+                    <div class="cta">
+                        <span data-text="agency_view_tours">Agentlik turlarini ko'rish</span>
+                        <span>→</span>
+                    </div>
+                </div>
+                <div class="agency-card" data-agency="azialux" data-type="international">
+                    <div class="agency-flair"></div>
+                    <button type="button" class="agency-badge" onclick="showLicense('azialux')" data-text="agency_badge_verified">★ <span data-text="agency_badge_verified">Tasdiqlangan</span></button>
+                    <h3 data-text="agency_azialux_name">AziaLux Travel</h3>
+                    <p data-text="agency_azialux_desc">Osiyo va Yevropadagi eksklyuziv gastro-turlar, premium servis va gidlar.</p>
+                    <div class="cta">
+                        <span data-text="agency_view_tours">Agentlik turlarini ko'rish</span>
+                        <span>→</span>
+                    </div>
+                </div>
+                <div class="agency-card" data-agency="globalvoyage" data-type="international">
+                    <div class="agency-flair"></div>
+                    <button type="button" class="agency-badge" onclick="showLicense('globalvoyage')" data-text="agency_badge_verified">★ <span data-text="agency_badge_verified">Tasdiqlangan</span></button>
+                    <h3 data-text="agency_globalvoyage_name">Global Voyage Hub</h3>
+                    <p data-text="agency_globalvoyage_desc">Xalqaro konferensiya va MICE turlar, 24/7 qo'llab-quvvatlash va viza xizmati.</p>
+                    <div class="cta">
+                        <span data-text="agency_view_tours">Agentlik turlarini ko'rish</span>
+                        <span>→</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section" id="about">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title" data-text="about_title">KETMON haqida</h2>
+                <p class="section-subtitle" data-text="about_subtitle">Markaziy Osiyoning eng ishonchli sayohat marketpleysida agentliklar va sayohatchilar birlashadi.</p>
+            </div>
+            <div class="about-grid">
+                <div class="about-story">
+                    <h3 data-text="about_story_title">Missiyamiz</h3>
+                    <p data-text="about_story_body1">Ketmon qadriyatlaridan ilhomlanib, biz doimo mehnatsevarlik va taraqqiyot ramzini xizmatlarimiz markaziga qo'yamiz.</p>
+                    <p data-text="about_story_body2">Platformamizda tasdiqlangan agentliklar, shaffof narxlar va TNPL imkoniyatlari yordamida sayohatchilar vaqtini va byudjetini tejashadi.</p>
+                    <ul class="about-bullets">
+                        <li><span>•</span><span data-text="about_bullet_network">Hamkorlarimiz real vaqt rejimida paketlarni yangilaydi va video-reels orqali yo'nalishlarni jonlantiradi.</span></li>
+                        <li><span>•</span><span data-text="about_bullet_support">24/7 yordam, integratsiyalangan chat va Telegram bildirishnomalari bilan agentliklar mijozlar bilan tezkor aloqa qiladi.</span></li>
+                        <li><span>•</span><span data-text="about_bullet_ai">AI tavsiyalari shaxsiylashgan marshrutlarni taklif etib, sayohatchilarga tez qaror qabul qilishga yordam beradi.</span></li>
+                    </ul>
+                </div>
+                <div class="about-stats">
+                    <div class="about-stat">
+                        <div class="about-stat-value" data-text="about_stat_partners_value">120+</div>
+                        <div class="about-stat-label" data-text="about_stat_partners_label">hamkor agentliklar</div>
+                    </div>
+                    <div class="about-stat">
+                        <div class="about-stat-value" data-text="about_stat_tours_value">650+</div>
+                        <div class="about-stat-label" data-text="about_stat_tours_label">faol tur paketlar</div>
+                    </div>
+                    <div class="about-stat">
+                        <div class="about-stat-value" data-text="about_stat_travelers_value">45k+</div>
+                        <div class="about-stat-label" data-text="about_stat_travelers_label">mamnun sayohatchilar</div>
+                    </div>
+                    <div class="about-stat">
+                        <div class="about-stat-value" data-text="about_stat_languages_value">3</div>
+                        <div class="about-stat-label" data-text="about_stat_languages_label">tilda qo'llab-quvvatlash</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <!-- Contact (anchor target) -->
+        <section id="contact" class="contact-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title" data-text="contact_title">Aloqada bo'laylik</h2>
+                    <p class="section-subtitle" data-text="contact_subtitle">Savol va takliflaringizni qoldiring — jamoamiz 24/7 yordam beradi.</p>
+                </div>
+                <div class="contact-grid">
+                    <div class="contact-card">
+                        <h3 data-text="contact_info_title">Nega KETMON?</h3>
+                        <p data-text="contact_info_body">Ketmon orqali siz tasdiqlangan agentliklar bilan ishlaysiz, narxlarni solishtirasiz va TNPL orqali to'lovlarni bo'lib-bo'lib amalga oshirasiz. Mijozlar va agentliklar uchun yagona panel barcha jarayonlarni bir joyga jamlaydi.</p>
+                        <ul class="contact-details">
+                            <li>
+                                <span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+                                <div>
+                                    <strong data-text="contact_phone_label">Telefon</strong>
+                                    <span data-text="contact_phone_value">*** *** ** **</span>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+                                <div>
+                                    <strong data-text="contact_email_label">Email</strong>
+                                    <span data-text="contact_email_value">***@******.uz</span>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+                                <div>
+                                    <strong data-text="contact_address_label">Manzil</strong>
+                                    <span data-text="contact_address_value">Toshkent, Navoiy ko'chasi 12, KETMON HUB</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <form class="contact-form" id="contactForm">
+                        <div>
+                            <label for="contactName" data-text="contact_form_name_label">Ism</label>
+                            <input type="text" id="contactName" name="name" placeholder="Ismingiz" data-placeholder="contact_form_name_placeholder" required>
+                        </div>
+                        <div>
+                            <label for="contactEmail" data-text="contact_form_email_label">Email</label>
+                            <input type="email" id="contactEmail" name="email" placeholder="you@example.com" data-placeholder="contact_form_email_placeholder" required>
+                        </div>
+                        <div>
+                            <label for="contactMessage" data-text="contact_form_message_label">Xabar</label>
+                            <textarea id="contactMessage" name="message" rows="4" placeholder="Savolingizni yozing..." data-placeholder="contact_form_message_placeholder" required></textarea>
+                        </div>
+                        <button type="submit" class="btn-gradient" data-text="contact_submit_btn">Yuborish</button>
+                        <div class="contact-status" id="contactStatus" data-text="contact_status_placeholder">Yuborilgan xabarlarimizga odatda 30 daqiqada javob beramiz.</div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tour Details Modal -->
+        <div class="modal-backdrop" id="tourModal">
+            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="tourModalTitle">
+                <div class="modal-header">
+                    <div class="modal-title" id="tourModalTitle">Tour</div>
+                    <button class="modal-close" aria-label="Close" id="tourModalClose">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-image">
+                        <img id="tourModalImage" src="" alt="Tour image">
+                    </div>
+                    <div class="modal-info">
+                        <p id="tourModalDescription">Description</p>
+                        <div class="modal-meta" id="tourModalMeta">
+                            <!-- chips injected -->
+                        </div>
+                        <div class="modal-actions">
+                            <button class="btn-primary" id="tourBookBtn" data-text="nav_book">Bron qilish</button>
+                            <a href="#contact" class="btn-primary" data-text="hero_btn2">Maslahat Olish</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Modal -->
+        <div class="modal-backdrop" id="loginModal">
+            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="loginModalTitle">
+                <div class="modal-header">
+                    <div class="modal-title" id="loginModalTitle" data-text="nav_login">Kirish</div>
+                    <button class="modal-close" aria-label="Close" id="loginModalClose">×</button>
+                </div>
+                <form class="modal-form" id="loginForm">
+                    <!-- Saved Account Display -->
+                    <div id="savedAccountDisplay" style="display: none; background: var(--bg-secondary); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 2px solid var(--accent-primary);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <div>
+                                <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">Saqlangan akkaunt</div>
+                                <div id="savedAccountEmail" style="color: var(--text-secondary); font-size: 14px;"></div>
+                            </div>
+                            <button type="button" id="forgetAccountBtn" style="background: transparent; border: none; color: var(--accent-primary); cursor: pointer; font-size: 12px; text-decoration: underline;">Unutish</button>
+                        </div>
+                        <button type="button" id="useSavedAccountBtn" class="btn-primary" style="width: 100%; margin-bottom: 8px;">Saqlangan akkaunt bilan kirish</button>
+                        <button type="button" id="enterNewAccountBtn" style="background: transparent; border: none; color: var(--accent-primary); cursor: pointer; font-size: 12px; width: 100%; text-decoration: underline;">Boshqa akkaunt bilan kirish</button>
+                    </div>
+
+                    <div id="loginFormFields">
+                        <div class="form-field">
+                            <label for="loginEmail" data-text="login_email_label">Email</label>
+                            <input id="loginEmail" type="email" placeholder="you@example.com" data-placeholder="login_email_placeholder" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="loginPassword" data-text="login_password_label">Parol</label>
+                            <div class="password-input-wrapper">
+                                <input id="loginPassword" type="password" placeholder="••••••••" data-placeholder="login_password_placeholder" minlength="4" required>
+                                <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('loginPassword', this)" aria-label="Show password">
+                                    <svg class="eye-icon eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                    <svg class="eye-icon eye-closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+                                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-field" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <label for="rememberMe" style="display: flex; align-items: center; gap: 6px; margin: 0; font-weight: normal; cursor: pointer; font-size: 14px;">
+                                <input type="checkbox" id="rememberMe" style="width: 18px; height: 18px; min-width: 18px; min-height: 18px; cursor: pointer; flex-shrink: 0; margin: 0;">
+                                <span>Akkauntni saqlash</span>
+                            </label>
+                            <a href="#forgot-password" class="forgot-password-link" onclick="openForgotPasswordModal(); return false;" style="color: #0a4d68; text-decoration: none; font-size: 14px; font-weight: 500;">Parolni unutdingizmi?</a>
+                        </div>
+                    </div>
+                    <!-- Social Login Options -->
+                    <div class="social-login-section">
+                        <div class="social-divider">
+                            <span>yoki</span>
+                        </div>
+                        <div class="social-login-buttons">
+                            <button type="button" class="social-login-btn google-btn" onclick="loginWithGoogle()">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                                </svg>
+                                <span>Google bilan kirish</span>
+                            </button>
+                            <button type="button" class="social-login-btn facebook-btn" onclick="loginWithFacebook()">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                </svg>
+                                <span>Facebook bilan kirish</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary" data-text="nav_login">Kirish</button>
+                        <button type="button" class="btn-primary" id="loginToRegister" data-text="register_switch">Ro'yxatdan o'tish</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Register Modal -->
+        <div class="modal-backdrop" id="registerModal">
+            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="registerModalTitle">
+                <div class="modal-header">
+                    <div class="modal-title" id="registerModalTitle" data-text="nav_register">Ro'yxatdan o'tish</div>
+                    <button class="modal-close" aria-label="Close" id="registerModalClose">×</button>
+                </div>
+                <form class="modal-form" id="registerForm">
+                    <div class="form-field" style="margin-bottom:4px;">
+                        <label data-text="register_role_label">Ro'l tanlang</label>
+                        <div class="segmented" role="tablist" aria-label="Register type">
+                            <button type="button" id="regTabCustomer" class="active" aria-selected="true" data-text="register_customer_tab">Mijoz</button>
+                            <button type="button" id="regTabAgency" aria-selected="false" data-text="register_agency_tab">Agentlik</button>
+                        </div>
+                    </div>
+                    <input type="hidden" id="regRole" value="customer">
+                    <div id="regFieldsCustomer">
+                        <div class="form-field">
+                            <label for="regName" data-text="register_name_label">Ism</label>
+                            <input id="regName" type="text" placeholder="Ismingiz" data-placeholder="register_name_placeholder" minlength="2" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="regEmail" data-text="register_email_label">Email</label>
+                            <input id="regEmail" type="email" placeholder="you@example.com" data-placeholder="register_email_placeholder" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="regPassword" data-text="register_password_label">Parol</label>
+                            <div class="password-input-wrapper">
+                                <input id="regPassword" type="password" placeholder="••••••••" data-placeholder="register_password_placeholder" minlength="6" required>
+                                <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('regPassword', this)" aria-label="Show password">
+                                    <svg class="eye-icon eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                    <svg class="eye-icon eye-closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+                                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="regFieldsAgency" class="hidden">
+                        <div class="form-field">
+                            <label for="regAgencyName" data-text="register_agency_name_label">Agentlik nomi</label>
+                            <input id="regAgencyName" type="text" placeholder="Agentlik nomi" data-placeholder="register_agency_name_placeholder" minlength="2">
+                        </div>
+                        <div class="form-field">
+                            <label for="regLicense" data-text="register_license_label">Litsenziya raqami</label>
+                            <input id="regLicense" type="text" placeholder="ABC-123456" data-placeholder="register_license_placeholder">
+                        </div>
+                        <div class="form-field">
+                            <label for="regAgencyEmail" data-text="register_agency_email_label">Agentlik Email</label>
+                            <input id="regAgencyEmail" type="email" placeholder="agency@example.com" data-placeholder="register_agency_email_placeholder">
+                        </div>
+                        <div class="form-field">
+                            <label for="regAgencyPhone" data-text="register_agency_phone_label">Telefon</label>
+                            <input id="regAgencyPhone" type="tel" placeholder="+998 xx xxx xx xx" data-placeholder="register_agency_phone_placeholder">
+                        </div>
+                        <div class="form-field">
+                            <label for="regAgencyPassword" data-text="register_agency_password_label">Parol</label>
+                            <div class="password-input-wrapper">
+                                <input id="regAgencyPassword" type="password" placeholder="••••••••" data-placeholder="register_agency_password_placeholder" minlength="6">
+                                <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('regAgencyPassword', this)" aria-label="Show password">
+                                    <svg class="eye-icon eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                    <svg class="eye-icon eye-closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+                                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary" data-text="register_submit">Yaratish</button>
+                        <button type="button" class="btn-primary" id="registerToLogin" data-text="nav_login">Kirish</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- License Modal -->
+        <div class="modal-backdrop" id="licenseModal">
+            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="licenseModalTitle">
+                <div class="modal-header">
+                    <div class="modal-title" id="licenseModalTitle" data-text="license_title">Sayohat Agentligi Litsenziyasi</div>
+                    <button class="modal-close" aria-label="Close" id="licenseModalClose">×</button>
+                </div>
+                <div class="modal-body" style="grid-template-columns: 1fr; padding: 25px;">
+                    <div class="license-content">
+                        <div class="license-header" style="text-align: center; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 2px solid var(--border-color);">
+                            <h3 id="licenseAgencyName" style="font-size: 24px; font-weight: 700; color: var(--text-primary); margin-bottom: 10px;"></h3>
+                            <p style="color: var(--text-secondary); font-size: 14px;" data-text="license_verified">Tasdiqlangan sayohat agentligi</p>
+                        </div>
+                        <div class="license-details" style="display: grid; gap: 20px;">
+                            <div class="license-item">
+                                <strong style="color: var(--text-primary); display: block; margin-bottom: 8px;" data-text="license_number">Litsenziya raqami:</strong>
+                                <span id="licenseNumber" style="color: var(--text-secondary); font-family: monospace; font-size: 16px;"></span>
+                            </div>
+                            <div class="license-item">
+                                <strong style="color: var(--text-primary); display: block; margin-bottom: 8px;" data-text="license_issued">Berilgan sana:</strong>
+                                <span id="licenseIssued" style="color: var(--text-secondary);"></span>
+                            </div>
+                            <div class="license-item">
+                                <strong style="color: var(--text-primary); display: block; margin-bottom: 8px;" data-text="license_expires">Amal qilish muddati:</strong>
+                                <span id="licenseExpires" style="color: var(--text-secondary);"></span>
+                            </div>
+                            <div class="license-item">
+                                <strong style="color: var(--text-primary); display: block; margin-bottom: 8px;" data-text="license_authority">Bergan organ:</strong>
+                                <span id="licenseAuthority" style="color: var(--text-secondary);"></span>
+                            </div>
+                            <div class="license-item">
+                                <strong style="color: var(--text-primary); display: block; margin-bottom: 8px;" data-text="license_status">Holati:</strong>
+                                <span id="licenseStatus" style="color: #10b981; font-weight: 600;">✓ <span data-text="license_active">Faol</span></span>
+                            </div>
+                        </div>
+                        <div class="license-note" style="margin-top: 25px; padding: 15px; background: var(--bg-secondary); border-radius: 12px; border-left: 4px solid var(--accent-primary);">
+                            <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6; margin: 0;" data-text="license_note">Ushbu litsenziya O'zbekiston Respublikasi Turizm va madaniy meros vazirligi tomonidan berilgan va tasdiqlangan. Agentlik barcha qonuniy talablarga javob beradi.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- All Destinations Modal -->
+        <div class="modal-backdrop" id="allDestinationsModal">
+            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="allDestinationsModalTitle" style="max-width: 1200px; max-height: 90vh; overflow-y: auto;">
+                <div class="modal-header">
+                    <div class="modal-title" id="allDestinationsModalTitle" data-text="destinations_title">Mashhur Yo'nalishlar</div>
+                    <button class="modal-close" aria-label="Close" id="allDestinationsModalClose">×</button>
+                </div>
+                <div class="modal-body" style="grid-template-columns: 1fr; padding: 25px;">
+                    <div class="all-destinations-grid" id="allDestinationsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;">
+                        <!-- Destinations will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- All Agencies Modal -->
+        <div class="modal-backdrop" id="allAgenciesModal">
+            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="allAgenciesModalTitle" style="max-width: 1200px; max-height: 90vh; overflow-y: auto;">
+                <div class="modal-header">
+                    <div class="modal-title" id="allAgenciesModalTitle" data-text="agency_section_title">Hamkor Agentliklar</div>
+                    <button class="modal-close" aria-label="Close" id="allAgenciesModalClose">×</button>
+                </div>
+                <div class="modal-body" style="grid-template-columns: 1fr; padding: 25px;">
+                    <div class="all-agencies-grid" id="allAgenciesGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;">
+                        <!-- Agencies will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Modal -->
+        <div class="modal-backdrop" id="paymentModal">
+                <div class="modal" role="dialog" aria-modal="true" aria-labelledby="paymentModalTitle" style="max-width: 520px;">
+                <div class="modal-header">
+                    <div class="modal-title" id="paymentModalTitle">To'lov</div>
+                    <button class="modal-close" aria-label="Close" id="paymentModalClose">×</button>
+                </div>
+                <div class="modal-body" style="grid-template-columns: 1fr; padding: 18px;">
+                    <!-- Tour Summary -->
+                    <div id="paymentTourSummary" style="background: var(--bg-secondary); border-radius: 12px; padding: 18px; margin-bottom: 20px; border: 1px solid var(--card-border);">
+                        <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px;">Sayohat ma'lumotlari</h3>
+                        <div id="paymentTourDetails" style="display: grid; gap: 8px;">
+                            <p id="paymentTourName" style="font-size: 14px; color: var(--text-primary); font-weight: 600;"></p>
+                            <p id="paymentTourPrice" style="font-size: 14px; color: var(--text-secondary);"></p>
+                        </div>
+                    </div>
+
+                    <!-- Payment Form -->
+                    <form class="modal-form" id="paymentForm" style="padding: 0;">
+                        <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 16px;">To'lov ma'lumotlari</h3>
+                        
+                        <div class="form-field">
+                            <label for="paymentName">To'liq ism</label>
+                            <input id="paymentName" type="text" placeholder="Ism Familiya" required>
+                        </div>
+                        
+                        <div class="form-field">
+                            <label for="paymentEmail">Email</label>
+                            <input id="paymentEmail" type="email" placeholder="you@example.com" required>
+                        </div>
+                        
+                        <div class="form-field">
+                            <label for="paymentPhone">Telefon raqami</label>
+                            <input id="paymentPhone" type="tel" placeholder="+998 xx xxx xx xx" required>
+                        </div>
+                        
+                        <div class="form-field">
+                            <label for="paymentCardNumber">Karta raqami</label>
+                            <input id="paymentCardNumber" type="text" placeholder="1234 5678 9012 3456" maxlength="19" pattern="[0-9\s]{13,19}" required>
+                        </div>
+                        
+                        <div class="payment-card-fields" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-field">
+                                <label for="paymentExpiry">Muddati (MM/YY)</label>
+                                <input id="paymentExpiry" type="text" placeholder="MM/YY" maxlength="5" pattern="[0-9]{2}/[0-9]{2}" required>
+                            </div>
+                            
+                            <div class="form-field">
+                                <label for="paymentCVV">CVV</label>
+                                <input id="paymentCVV" type="text" placeholder="123" maxlength="4" pattern="[0-9]{3,4}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-field">
+                            <label for="paymentAddress">Manzil</label>
+                            <input id="paymentAddress" type="text" placeholder="To'liq manzil" required>
+                        </div>
+                        
+                        <div class="form-field" style="margin-top: 8px;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" id="paymentTerms" required style="width: 18px; height: 18px; cursor: pointer;">
+                                <span style="font-size: 13px; color: var(--text-secondary);">Men <a href="#" style="color: var(--accent-primary);">shartlar va qoidalar</a> bilan tanishdim va roziman</span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-actions" style="margin-top: 16px;">
+                            <button type="submit" class="btn-primary" style="flex: 1;">To'lovni amalga oshirish</button>
+                            <button type="button" class="btn-primary" id="paymentCancel" style="background: var(--bg-secondary) !important; color: var(--text-primary) !important;">Bekor qilish</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script src="js/api.js"></script>
+        <script src="script.js"></script>
+
+        <!-- Service Worker Registration for PWA -->
+        
+    <!-- Forgot Password Modal -->
+    <div class="modal-backdrop" id="forgotPasswordModal">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="forgotPasswordModalTitle">
+            <div class="modal-header">
+                <div class="modal-title" id="forgotPasswordModalTitle">Parolni tiklash</div>
+                <button class="modal-close" aria-label="Close" id="forgotPasswordModalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="forgotPasswordForm">
+                    <div class="form-field">
+                        <label for="forgotPasswordEmail">Email manzilingiz</label>
+                        <input id="forgotPasswordEmail" type="email" placeholder="you@example.com" required>
+                    </div>
+                    <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px;">
+                        Email manzilingizga parolni tiklash havolasi yuboriladi.
+                    </p>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Yuborish</button>
+                        <button type="button" class="btn-secondary" onclick="closeForgotPasswordModal()">Bekor qilish</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Password Modal -->
+    <div class="modal-backdrop" id="resetPasswordModal">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="resetPasswordModalTitle">
+            <div class="modal-header">
+                <div class="modal-title" id="resetPasswordModalTitle">Yangi parol o'rnatish</div>
+                <button class="modal-close" aria-label="Close" id="resetPasswordModalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="resetPasswordForm">
+                    <div class="form-field">
+                        <label for="resetPasswordNew">Yangi parol</label>
+                        <div class="password-input-wrapper">
+                            <input id="resetPasswordNew" type="password" placeholder="••••••••" minlength="6" required>
+                            <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('resetPasswordNew', this)" aria-label="Show password">
+                                <svg class="eye-icon eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                <svg class="eye-icon eye-closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+                                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <label for="resetPasswordConfirm">Parolni tasdiqlang</label>
+                        <div class="password-input-wrapper">
+                            <input id="resetPasswordConfirm" type="password" placeholder="••••••••" minlength="6" required>
+                            <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('resetPasswordConfirm', this)" aria-label="Show password">
+                                <svg class="eye-icon eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                <svg class="eye-icon eye-closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+                                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Parolni yangilash</button>
+                        <button type="button" class="btn-secondary" onclick="closeResetPasswordModal()">Bekor qilish</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </body>

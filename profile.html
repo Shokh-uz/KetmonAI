@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KETMON — Profil</title>
+    <style>
+        :root {
+            --bg-primary: #f0f4ff;
+            --bg-secondary: #e8f0ff;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a5568;
+            --brand: #0a4d68;
+            --brand-2: #088395;
+            --border: rgba(0, 212, 255, 0.2);
+            --card-bg: rgba(255,255,255,0.95);
+        }
+        [data-theme="dark"] {
+            --bg-primary: #0a0e27;
+            --bg-secondary: #0f1629;
+            --text-primary: #e0f2ff;
+            --text-secondary: #a0b8d0;
+            --border: rgba(0, 212, 255, 0.3);
+            --card-bg: rgba(15,22,41,0.7);
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        .container {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0 4px;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .top-actions { display: flex; gap: 10px; }
+        .btn, button {
+            appearance: none;
+            border: 1px solid rgba(10, 77, 104, 0.2);
+            background: #fff;
+            color: #0a4d68;
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-weight: 500;
+            font-size: 13px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 36px;
+        }
+        .btn:hover, button:hover {
+            background: #0a4d68;
+            color: #fff;
+            border-color: #0a4d68;
+            transform: translateY(-1px);
+        }
+        .btn.secondary {
+            background: transparent;
+            color: #0a4d68;
+        }
+        .btn.secondary:hover {
+            background: rgba(10, 77, 104, 0.1);
+            color: #0a4d68;
+            transform: translateY(-1px);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #0a4d68 0%, #088395 100%);
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 36px;
+            box-shadow: 0 4px 15px rgba(10, 77, 104, 0.2);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(10, 77, 104, 0.35);
+        }
+        .profile-hero {
+            background: linear-gradient(135deg, rgba(10,77,104,0.12) 0%, rgba(8,131,149,0.12) 100%);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 22px;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 18px;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .avatar {
+            position: relative;
+            width: 112px;
+            height: 112px;
+            border-radius: 999px;
+            overflow: hidden;
+            border: 2px solid var(--border);
+            background: var(--card-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--brand);
+        }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .avatar-initials { display: inline-block; }
+        .avatar-actions { display: flex; gap: 8px; margin-top: 8px; }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .row {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--border);
+        }
+        .row:last-child { border-bottom: 0; }
+        .label { color: var(--text-secondary); }
+        .muted { color: var(--text-secondary); font-size: 14px; }
+        @media (max-width: 780px) {
+            .grid { grid-template-columns: 1fr; }
+            .row { grid-template-columns: 1fr; gap: 6px; }
+            .profile-hero { grid-template-columns: 1fr; text-align: center; }
+            .avatar { margin: 0 auto; }
+            .top-actions { flex-wrap: wrap; justify-content: flex-end; }
+        }
+        input[type=file] { display: none; }
+        .pill {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 6px 10px;
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">KETMON</div>
+            <div class="top-actions">
+                <a class="btn secondary" href="index.html">Bosh sahifa</a>
+            </div>
+        </header>
+
+        <section class="profile-hero card">
+            <div>
+                <div class="avatar" id="avatarBox">
+                    <img id="avatarImg" alt="Profile">
+                    <span id="avatarInitials" class="avatar-initials">U</span>
+                </div>
+                <div class="avatar-actions">
+                    <label class="btn" for="avatarInput">Rasm yuklash</label>
+                    <button id="removeAvatarBtn" class="btn secondary" type="button">O'chirish</button>
+                    <input id="avatarInput" type="file" accept="image/*">
+                </div>
+            </div>
+            <div>
+                <h2 id="heroName" style="margin:0 0 6px 0;">—</h2>
+                <div class="pill"><span id="heroEmail">—</span></div>
+                <div class="muted" id="heroRole" style="margin-top:8px;">—</div>
+            </div>
+        </section>
+
+        <div class="grid">
+            <div class="card">
+                <h3 style="margin: 0 0 12px;">Profil ma’lumotlari</h3>
+                <div class="row">
+                    <div class="label">Ism</div>
+                    <div id="pfName">—</div>
+                </div>
+                <div class="row">
+                    <div class="label">Email</div>
+                    <div id="pfEmail">—</div>
+                </div>
+                <div class="row">
+                    <div class="label">Rol</div>
+                    <div id="pfRole">—</div>
+                </div>
+                <div id="pfMeta" class="muted"></div>
+                <div style="margin-top:14px; display:flex; gap:10px;">
+                    <button id="logoutBtn" class="btn-primary">Chiqish</button>
+                </div>
+            </div>
+            <div class="card">
+                <h3 style="margin: 0 0 12px;">Xavfsizlik</h3>
+                <p class="muted">Profil ma’lumotlari brauzeringizda saqlanadi. Backend JWT bilan ulanadigan holat uchun /api/auth ni ishlating.</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        (function(){
+            // Theme from index if used
+            try {
+                var theme = localStorage.getItem('theme') || 'light';
+                document.documentElement.setAttribute('data-theme', theme);
+            } catch(e) {}
+
+            var nameEl = document.getElementById('pfName');
+            var emailEl = document.getElementById('pfEmail');
+            var roleEl = document.getElementById('pfRole');
+            var metaEl = document.getElementById('pfMeta');
+            var heroName = document.getElementById('heroName');
+            var heroEmail = document.getElementById('heroEmail');
+            var heroRole = document.getElementById('heroRole');
+            var logoutBtn = document.getElementById('logoutBtn');
+
+            var avatarImg = document.getElementById('avatarImg');
+            var avatarInitials = document.getElementById('avatarInitials');
+            var avatarInput = document.getElementById('avatarInput');
+            var removeAvatarBtn = document.getElementById('removeAvatarBtn');
+
+            function initialsFromName(n) {
+                if (!n) return 'U';
+                var parts = n.trim().split(/\\s+/);
+                var first = (parts[0] || '').charAt(0);
+                var second = (parts[1] || '').charAt(0);
+                return (first + second).toUpperCase() || first.toUpperCase() || 'U';
+            }
+
+            function applyUser(user) {
+                var displayName = user.name || '—';
+                var displayEmail = user.email || '—';
+                var displayRole = user.role || 'customer';
+                nameEl.textContent = displayName;
+                emailEl.textContent = displayEmail;
+                roleEl.textContent = displayRole;
+                heroName.textContent = displayName;
+                heroEmail.textContent = displayEmail;
+                heroRole.textContent = displayRole === 'agency' ? 'Agentlik' : 'Mijoz';
+                // Avatar
+                var saved = '';
+                try { saved = localStorage.getItem('ketmon_avatar') || ''; } catch(e) {}
+                if (saved) {
+                    avatarImg.src = saved;
+                    avatarImg.style.display = 'block';
+                    avatarInitials.style.display = 'none';
+                } else {
+                    avatarImg.style.display = 'none';
+                    avatarInitials.style.display = 'inline-block';
+                    avatarInitials.textContent = initialsFromName(displayName);
+                }
+            }
+
+            function renderLocal() {
+                var user = null;
+                try { user = JSON.parse(localStorage.getItem('ketmon_user') || 'null'); } catch(e) {}
+                if (user && (user.name || user.email)) {
+                    applyUser(user);
+                    metaEl.textContent = '';
+                    return true;
+                }
+                return false;
+            }
+
+            function renderRemote(token) {
+                return fetch('/api/profile', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                }).then(function(r){
+                    if (!r.ok) throw new Error('Auth required');
+                    return r.json();
+                }).then(function(p){
+                    applyUser(p);
+                    metaEl.textContent = '';
+                }).catch(function(){
+                    if (!renderLocal()) {
+                        metaEl.textContent = 'Profil topilmadi. Iltimos, tizimga kiring.';
+                    }
+                });
+            }
+
+            (function init(){
+                var rendered = renderLocal();
+                var token = null;
+                try { token = localStorage.getItem('ketmon_token') || ''; } catch(e) {}
+                if (token) renderRemote(token);
+                if (!rendered && !token) metaEl.textContent = 'Profil topilmadi. Iltimos, tizimga kiring.';
+            })();
+
+            avatarInput.addEventListener('change', function(){
+                var file = avatarInput.files && avatarInput.files[0];
+                if (!file) return;
+                if (!/^image\//.test(file.type)) { alert('Rasm faylini tanlang.'); return; }
+                if (file.size > 2 * 1024 * 1024) { alert('2MB dan kichik rasm tanlang.'); return; }
+                var reader = new FileReader();
+                reader.onload = function(e){
+                    var data = e.target.result;
+                    avatarImg.src = data;
+                    avatarImg.style.display = 'block';
+                    avatarInitials.style.display = 'none';
+                    try { localStorage.setItem('ketmon_avatar', data); } catch(err) {}
+                };
+                reader.readAsDataURL(file);
+            });
+
+            removeAvatarBtn.addEventListener('click', function(){
+                try { localStorage.removeItem('ketmon_avatar'); } catch(e) {}
+                // refresh avatar view
+                var user = null;
+                try { user = JSON.parse(localStorage.getItem('ketmon_user') || 'null'); } catch(e) {}
+                applyUser(user || {});
+            });
+
+            logoutBtn.addEventListener('click', function(){
+                try {
+                    localStorage.removeItem('ketmon_user');
+                    localStorage.removeItem('ketmon_token');
+                    localStorage.removeItem('ketmon_avatar');
+                    localStorage.removeItem('ketmon_agency');
+                } catch(e) {}
+                window.location.href = 'index.html';
+            });
+        })();
+    </script>
+</body>
+</html>
+
+
