@@ -3580,6 +3580,7 @@ nav a:hover::after {
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    scroll-snap-type: x mandatory;
 }
 
 .destination-grid::-webkit-scrollbar {
@@ -3602,6 +3603,7 @@ nav a:hover::after {
     animation: fadeInUp 0.6s ease forwards;
     position: relative;
     z-index: 1;
+    scroll-snap-align: start;
 }
 
 .destination-card::before {

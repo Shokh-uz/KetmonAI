@@ -1789,7 +1789,7 @@ document.addEventListener('click', function (e) {
     window.addEventListener('resize', ensureLength);
 })();
 
-/* Scroll by 4 destinations at a time */
+/* Scroll by 1 destination at a time */
 (function () {
     var grid = document.querySelector('.destinations .destination-grid');
     if (!grid) return;
@@ -1798,14 +1798,14 @@ document.addEventListener('click', function (e) {
     var scrollTimeout = null;
     var cardWidth = 320; // Card width in pixels
     var gap = 25; // Gap between cards in pixels
-    var cardsPerScroll = 4; // Number of cards to scroll at once
-    var scrollDistance = (cardWidth * cardsPerScroll) + (gap * (cardsPerScroll - 1)); // 1355px for 4 cards
+    var cardsPerScroll = 1; // Number of cards to scroll at once
+    var scrollDistance = cardWidth + gap; // Distance for 1 card
 
-    // Calculate the nearest snap position for a group of 4 cards
+    // Calculate the nearest snap position for a single card
     function getNearestSnapPosition(currentScroll) {
-        // Calculate which group of 4 we're closest to
-        var groupIndex = Math.round(currentScroll / scrollDistance);
-        return groupIndex * scrollDistance;
+        // Calculate which card we're closest to
+        var cardIndex = Math.round(currentScroll / scrollDistance);
+        return cardIndex * scrollDistance;
     }
 
     // Handle wheel scroll events
@@ -1828,7 +1828,7 @@ document.addEventListener('click', function (e) {
         var maxScroll = grid.scrollWidth - grid.clientWidth;
         targetScroll = Math.max(0, Math.min(targetScroll, maxScroll));
 
-        // Snap to nearest group of 4
+        // Snap to nearest card
         targetScroll = getNearestSnapPosition(targetScroll);
 
         // Smooth scroll to target position
@@ -1865,7 +1865,7 @@ document.addEventListener('click', function (e) {
         var minSwipeDistance = 50; // Minimum swipe distance to trigger scroll
 
         if (Math.abs(deltaX) < minSwipeDistance) {
-            // Small swipe, snap to nearest group
+            // Small swipe, snap to nearest card
             var currentScroll = grid.scrollLeft;
             var targetScroll = getNearestSnapPosition(currentScroll);
             grid.scrollTo({
@@ -1873,7 +1873,7 @@ document.addEventListener('click', function (e) {
                 behavior: 'smooth'
             });
         } else {
-            // Large swipe, scroll by 4 cards in swipe direction
+            // Large swipe, scroll by 1 card in swipe direction
             var direction = deltaX > 0 ? 1 : -1;
             var currentScroll = grid.scrollLeft;
             var targetScroll = currentScroll + (direction * scrollDistance);
@@ -1888,7 +1888,7 @@ document.addEventListener('click', function (e) {
         }
     }
 
-    // Handle scroll end to snap to nearest group of 4
+    // Handle scroll end to snap to nearest card
     function handleScrollEnd() {
         if (isScrolling) return;
 
@@ -3966,6 +3966,52 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }
+})();
+
+// Navigation Active State Management
+(function() {
+    const navLinks = document.querySelectorAll('.desktop-nav a');
+    const sections = document.querySelectorAll('section[id]');
+    
+    function updateActiveNav() {
+        let current = '';
+        const scrollY = window.pageYOffset;
+        
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop - 100;
+            const sectionHeight = section.offsetHeight;
+            
+            if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+                current = section.getAttribute('id');
+            }
+        });
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            const href = link.getAttribute('href');
+            if (href === '#' + current || (current === 'home' && href === '#home')) {
+                link.classList.add('active');
+            }
+        });
+    }
+    
+    // Update on scroll
+    window.addEventListener('scroll', updateActiveNav);
+    
+    // Update on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        updateActiveNav();
+        
+        // Also update when clicking nav links
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Remove active from all
+                navLinks.forEach(l => l.classList.remove('active'));
+                // Add active to clicked
+                this.classList.add('active');
+            });
+        });
+    });
 })();
 
 
