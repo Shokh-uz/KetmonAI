@@ -3362,7 +3362,6 @@ window.togglePasswordVisibility = togglePasswordVisibility;
 // IMPORTANT: Use your CLIENT ID (looks like: 123456789-xxxxx.apps.googleusercontent.com)
 // NOT the Client Secret (which starts with GOCSPX-)
 var GOOGLE_CLIENT_ID = '735852390296-378bisf38fhib67o72rjmdm5spv945cs.apps.googleusercontent.com'; // Replace with your Google Client ID
-var FACEBOOK_APP_ID = 'YOUR_FACEBOOK_APP_ID'; // Replace with your Facebook App ID
 
 // Helper function to handle successful social login - Backend API
 async function handleSocialLoginSuccess(userData, provider) {
@@ -3381,16 +3380,6 @@ async function handleSocialLoginSuccess(userData, provider) {
                 // This shouldn't happen, but handle it gracefully
                 console.error('Google credential not found in userData');
                 throw new Error('Google credential not found');
-            }
-        } else if (provider === 'facebook') {
-            // For Facebook, send access token and user ID
-            if (userData.accessToken && userData.userID) {
-                console.log('Calling authAPI.loginWithFacebook...');
-                response = await authAPI.loginWithFacebook(userData.accessToken, userData.userID);
-                console.log('Backend response:', response);
-            } else {
-                console.error('Facebook access token not found');
-                throw new Error('Facebook access token not found');
             }
         } else {
             console.error('Unknown provider:', provider);
@@ -3594,65 +3583,8 @@ function loginWithGoogle() {
     }
 }
 
-// Facebook Login Function
-function loginWithFacebook() {
-    // Check if Facebook SDK is loaded
-    if (typeof FB === 'undefined') {
-        alert('Facebook SDK yuklanmagan. Iltimos, sahifani yangilang.');
-        return;
-    }
-    
-    // Check if App ID is configured
-    if (FACEBOOK_APP_ID === 'YOUR_FACEBOOK_APP_ID') {
-        alert('Facebook App ID sozlanmagan. Iltimos, index.html va script.js fayllarida FACEBOOK_APP_ID ni o\'rnating.\n\nFacebook App ID olish:\n1. https://developers.facebook.com ga kiring\n2. My Apps > Create App\n3. App ID ni oling va sozlang');
-        return;
-    }
-    
-    // Check login status
-    FB.getLoginStatus(function(response) {
-        if (response.status === 'connected') {
-            // Already logged in, get user info
-            getFacebookUserInfo(response.authResponse.accessToken);
-        } else {
-            // Not logged in, trigger login
-            FB.login(function(response) {
-                if (response.authResponse) {
-                    // User logged in, get user info
-                    getFacebookUserInfo(response.authResponse.accessToken);
-                } else {
-                    alert('Facebook bilan kirish bekor qilindi.');
-                }
-            }, {
-                scope: 'email,public_profile',
-                return_scopes: true
-            });
-        }
-    });
-}
-
-// Helper function to get Facebook user info
-function getFacebookUserInfo(accessToken) {
-    FB.api('/me', {
-        fields: 'id,name,email,picture',
-        access_token: accessToken
-    }, function(response) {
-        if (response.error) {
-            console.error('Facebook API error:', response.error);
-            alert('Facebook ma\'lumotlarini olishda xatolik yuz berdi.');
-            return;
-        }
-        
-        // Send access token and userID to backend
-        handleSocialLoginSuccess({
-            accessToken: accessToken,
-            userID: response.id
-        }, 'facebook');
-    });
-}
-
 // Make functions globally accessible
 window.loginWithGoogle = loginWithGoogle;
-window.loginWithFacebook = loginWithFacebook;
 window.handleSocialLoginSuccess = handleSocialLoginSuccess;
 
 // Forgot Password Modal Functions
