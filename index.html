@@ -35,6 +35,216 @@
     
     <title>MVP</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Contact Section - Light Blue-Grey Gradient Background */
+        .contact-section {
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 50%, #e0f7fa 100%) !important;
+            padding: 90px 0;
+        }
+        
+        .contact-section .section-header {
+            margin-bottom: 50px;
+        }
+        
+        .contact-section .section-title {
+            color: #1f2937;
+        }
+        
+        .contact-section .section-subtitle {
+            color: #6b7280;
+        }
+        
+        /* Contact Grid - Two Panels Side by Side */
+        .contact-grid {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 32px !important;
+            max-width: 1200px;
+            margin: 0 auto;
+            align-items: stretch;
+        }
+        
+        /* Left Panel - Contact Info Card */
+        .contact-card {
+            background: white !important;
+            border-radius: 20px !important;
+            padding: 40px !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+            border: none !important;
+        }
+        
+        .contact-card h3 {
+            color: #1f2937 !important;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        
+        .contact-card p {
+            color: #4b5563 !important;
+            line-height: 1.7;
+            margin-bottom: 28px;
+        }
+        
+        .contact-details {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            gap: 20px;
+        }
+        
+        .contact-details li {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        
+        .contact-details li .icon {
+            color: #06b6d4;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .contact-details li .icon svg {
+            width: 22px;
+            height: 22px;
+        }
+        
+        .contact-details li div {
+            flex: 1;
+        }
+        
+        .contact-details li strong {
+            display: block;
+            color: #1f2937 !important;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .contact-details li span:not(.icon) {
+            color: #4b5563 !important;
+        }
+        
+        /* Right Panel - Contact Form */
+        .contact-form-wrapper {
+            background: white !important;
+            border-radius: 20px !important;
+            padding: 40px !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+            border: none !important;
+        }
+        
+        .contact-form-new {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: grid;
+            gap: 8px;
+        }
+        
+        .form-group label {
+            color: #1f2937;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: white;
+            color: #1f2937;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #06b6d4;
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 8px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(6, 182, 212, 0.3);
+        }
+        
+        .submit-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .contact-status {
+            font-size: 14px;
+            color: #06b6d4;
+            text-align: center;
+            margin-top: 8px;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 20px 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+        }
+        
+        .notification.success {
+            border-left: 4px solid #10b981;
+        }
+        
+        .notification.error {
+            border-left: 4px solid #ef4444;
+        }
+        
+        .notification.show {
+            display: block;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .contact-card,
+            .contact-form-wrapper {
+                padding: 28px;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation Section -->
@@ -622,14 +832,14 @@
                                 <span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
                                 <div>
                                     <strong data-text="contact_phone_label">Telefon</strong>
-                                    <span data-text="contact_phone_value">*** *** ** **</span>
+                                    <span data-text="contact_phone_value">+998 90 765 43 21</span>
                                 </div>
                             </li>
                             <li>
                                 <span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
                                 <div>
                                     <strong data-text="contact_email_label">Email</strong>
-                                    <span data-text="contact_email_value">***@******.uz</span>
+                                    <span data-text="contact_email_value">support@ketmon.uz</span>
                                 </div>
                             </li>
                             <li>
@@ -641,22 +851,35 @@
                             </li>
                         </ul>
                     </div>
-                    <form class="contact-form" id="contactForm">
-                        <div>
-                            <label for="contactName" data-text="contact_form_name_label">Ism</label>
-                            <input type="text" id="contactName" name="name" placeholder="Ismingiz" data-placeholder="contact_form_name_placeholder" required>
-                        </div>
-                        <div>
-                            <label for="contactEmail" data-text="contact_form_email_label">Email</label>
-                            <input type="email" id="contactEmail" name="email" placeholder="you@example.com" data-placeholder="contact_form_email_placeholder" required>
-                        </div>
-                        <div>
-                            <label for="contactMessage" data-text="contact_form_message_label">Xabar</label>
-                            <textarea id="contactMessage" name="message" rows="4" placeholder="Savolingizni yozing..." data-placeholder="contact_form_message_placeholder" required></textarea>
-                        </div>
-                        <button type="submit" class="btn-gradient" data-text="contact_submit_btn">Yuborish</button>
-                        <div class="contact-status" id="contactStatus" data-text="contact_status_placeholder">Yuborilgan xabarlarimizga odatda 30 daqiqada javob beramiz.</div>
-                    </form>
+                    <div class="contact-form-wrapper">
+                        <form id="telegramContactForm" class="contact-form-new">
+                            <div class="form-group">
+                                <label for="name">Ism</label>
+                                <input type="text" id="name" name="name" required placeholder="Ismingiz">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required placeholder="you@example.com">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="phone">Telefon</label>
+                                <input type="tel" id="phone" name="phone" placeholder="+998 90 123 45 67">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="message">Xabar</label>
+                                <textarea id="message" name="message" required placeholder="Savolingizni yozing..."></textarea>
+                            </div>
+                            
+                            <button type="submit" class="submit-btn" id="submitBtn">
+                                Yuborish
+                            </button>
+                            <div class="contact-status" id="contactStatus">Yuborilgan xabarlarimizga odatda 30 daqiqada javob beramiz.</div>
+                        </form>
+                    </div>
+                    <div class="notification" id="notification"></div>
                 </div>
             </div>
         </section>
@@ -1070,4 +1293,108 @@
             </div>
         </div>
     </div>
+    <script>
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // SIZNING MA'LUMOTLARINGIZ
+            const TELEGRAM_BOT_TOKEN = '8590943398:AAH9GY0vhj80R3aCf2Mm-Md9leYivC0hRVA';
+            const TELEGRAM_CHAT_ID = '5596068192';
+            const form = document.getElementById('telegramContactForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const notification = document.getElementById('notification');
+
+            if (!form || !submitBtn || !notification) {
+                console.error('Form elements not found');
+                return;
+            }
+
+            function showNotification(message, type) {
+                if (notification) {
+                    notification.textContent = message;
+                    notification.className = `notification ${type} show`;
+                    setTimeout(() => notification.classList.remove('show'), 5000);
+                }
+            }
+
+            async function sendToTelegram(data) {
+                const message = `
+🔔 YANGI XABAR - KETMON.UZ
+
+👤 Ism: ${data.name}
+📧 Email: ${data.email}
+${data.phone ? `📱 Telefon: ${data.phone}` : ''}
+💬 Xabar:
+${data.message}
+
+⏰ ${new Date().toLocaleString('uz-UZ')}
+                `.trim();
+                
+                const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: message,
+                        parse_mode: 'HTML'
+                    })
+                });
+                
+                return response.json();
+            }
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Yuborilmoqda...';
+                
+                const nameInput = document.getElementById('name');
+                const emailInput = document.getElementById('email');
+                const phoneInput = document.getElementById('phone');
+                const messageInput = document.getElementById('message');
+                
+                if (!nameInput || !emailInput || !messageInput) {
+                    showNotification('❌ Forma elementlari topilmadi', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Yuborish';
+                    return;
+                }
+                
+                const formData = {
+                    name: nameInput.value.trim(),
+                    email: emailInput.value.trim(),
+                    phone: phoneInput ? phoneInput.value.trim() : '',
+                    message: messageInput.value.trim()
+                };
+                
+                // Validation
+                if (!formData.name || !formData.email || !formData.message) {
+                    showNotification('❌ Iltimos, barcha majburiy maydonlarni to\'ldiring', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Yuborish';
+                    return;
+                }
+                
+                try {
+                    const result = await sendToTelegram(formData);
+                    
+                    if (result.ok) {
+                        showNotification('✅ Xabar yuborildi!', 'success');
+                        form.reset();
+                    } else {
+                        console.error('Telegram API error:', result);
+                        throw new Error(result.description || 'Xato');
+                    }
+                } catch (error) {
+                    console.error('Error sending message:', error);
+                    showNotification('❌ Xatolik yuz berdi: ' + error.message, 'error');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Yuborish';
+                }
+            });
+        });
+    </script>
     </body>
