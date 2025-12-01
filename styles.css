@@ -3519,7 +3519,7 @@ nav a:hover::after {
 .destinations {
     padding: 100px 0;
     background: var(--bg-primary);
-    transition: background-color 0.3s ease;
+    transition: background-color ;
     overflow-x: hidden;
 }
 
