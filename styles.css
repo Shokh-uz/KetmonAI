@@ -3519,7 +3519,7 @@ nav a:hover::after {
 .destinations {
     padding: 100px 0;
     background: var(--bg-primary);
-    transition: background-color ;
+    transition: background-color;
     overflow-x: hidden;
 }
 
@@ -3679,7 +3679,7 @@ nav a:hover::after {
     align-items: center;
     gap: 8px;
     letter-spacing: .2px;
-    transition: all 0.3s ease;
+    transition: all 0s;
 }
 .destination-badge::before{
     content: "★";
@@ -3751,7 +3751,7 @@ nav a:hover::after {
     padding: 6px 12px;
     border-radius: 999px;
     white-space: nowrap;
-    transition: all 0.3s ease;
+    transition: all 0s;
     box-shadow: 0 0 10px var(--accent-glow);
 }
 

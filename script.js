@@ -3854,7 +3854,31 @@ document.addEventListener('DOMContentLoaded', function() {
             const agency = document.getElementById('searchAgency').value;
             const guests = document.getElementById('searchGuests').value;
             
-            // Here you can add your search logic
+            // Perform destination search first
+            performDestinationSearch(destination || '');
+            
+            // Additional filtering by agency if specified
+            if (agency && agency !== 'all') {
+                const destinationCards = document.querySelectorAll('.destination-card');
+                destinationCards.forEach(card => {
+                    // Only hide if it's currently visible (not already hidden by destination search)
+                    if (card.style.display !== 'none') {
+                        const cardAgency = card.getAttribute('data-agency');
+                        if (cardAgency !== agency) {
+                            card.style.display = 'none';
+                        }
+                    }
+                });
+            }
+            
+            // Scroll to destinations section
+            const destinationsSection = document.getElementById('destinations');
+            if (destinationsSection) {
+                setTimeout(() => {
+                    destinationsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+            
             console.log('Search parameters:', {
                 destination,
                 date,
@@ -3862,12 +3886,651 @@ document.addEventListener('DOMContentLoaded', function() {
                 agency,
                 guests
             });
-            
-            // You can trigger your search function here
-            // performSearch({ destination, date, duration, agency, guests });
         });
     }
 })();
+
+// Advanced auto-correction with multiple algorithms
+function autoCorrectSearch(searchTerm) {
+    const originalTerm = searchTerm.toLowerCase().trim();
+    
+    // Comprehensive typo dictionary with all variations
+    const corrections = {
+        // Rome/Roma variations (Rim, Roma, Rome, Italy)
+        'rom': 'roma', 'romaa': 'roma', 'romma': 'roma', 'romm': 'roma',
+        'rome': 'roma', 'roam': 'roma', 'romi': 'roma', 'romu': 'roma',
+        'rim': 'roma', 'rimm': 'roma', 'rym': 'roma', 'romy': 'roma',
+        'romaa': 'roma', 'romma': 'roma', 'rommm': 'roma',
+        'italiya': 'italiya', 'italy': 'italiya', 'itali': 'italiya',
+        
+        // Paris variations (Parij, Paris, France)
+        'pariss': 'paris', 'parijs': 'paris', 'parisss': 'paris',
+        'pari': 'paris', 'pariz': 'paris', 'parise': 'paris',
+        'parys': 'paris', 'parijs': 'paris', 'pariss': 'paris',
+        'parij': 'paris', 'pary': 'paris', 'pariss': 'paris',
+        'fransiya': 'paris', 'france': 'paris', 'frans': 'paris',
+        'fransiya': 'paris', 'frans': 'paris',
+        
+        // Dubai variations (Dubay, Dubai, UAE, BAA)
+        'dubayy': 'dubai', 'dubaai': 'dubai', 'dubay': 'dubai',
+        'dubaii': 'dubai', 'dubay': 'dubai', 'dubey': 'dubai',
+        'dubay': 'dubai', 'dubai': 'dubai', 'dubayy': 'dubai',
+        'baa': 'dubai', 'uae': 'dubai', 'emirates': 'dubai',
+        
+        // Tokyo variations (Tokio, Tokyo, Japan)
+        'tokyoo': 'tokyo', 'tokyyo': 'tokyo', 'tokio': 'tokyo',
+        'toky': 'tokyo', 'tokyo': 'tokyo', 'tokyyo': 'tokyo',
+        'tokyoo': 'tokyo', 'tokyio': 'tokyo', 'tokyoo': 'tokyo',
+        'yaponiya': 'tokyo', 'japan': 'tokyo', 'yapon': 'tokyo',
+        
+        // Istanbul variations (Istanbul, Turkey)
+        'istambul': 'istanbul', 'istanbull': 'istanbul',
+        'istanbul': 'istanbul', 'istambul': 'istanbul',
+        'istanbul': 'istanbul', 'istambul': 'istanbul',
+        'istanbol': 'istanbul', 'istambul': 'istanbul',
+        'turkiya': 'istanbul', 'turkey': 'istanbul', 'turk': 'istanbul',
+        
+        // Bangkok variations (Bangkok, Thailand)
+        'bangok': 'bangkok', 'bangkokk': 'bangkok',
+        'bangkok': 'bangkok', 'bangok': 'bangkok',
+        'bangkok': 'bangkok', 'bangok': 'bangkok',
+        'tailand': 'bangkok', 'thailand': 'bangkok', 'tayland': 'bangkok',
+        
+        // London variations (London, UK, Britain)
+        'londoon': 'london', 'londdon': 'london',
+        'london': 'london', 'londoon': 'london',
+        'londan': 'london', 'londin': 'london', 'londn': 'london',
+        'uk': 'london', 'britain': 'london', 'britaniya': 'london',
+        
+        // Baku variations (Boku, Baku, Azerbaijan)
+        'bakku': 'baku', 'bakoo': 'baku', 'boku': 'baku',
+        'baku': 'baku', 'bakku': 'baku', 'bakoo': 'baku',
+        'ozarbayjon': 'baku', 'azerbaijan': 'baku', 'azerbaycan': 'baku',
+        
+        // Switzerland variations (Shveysariya, Switzerland)
+        'switzerland': 'switzerland', 'switz': 'switzerland',
+        'shveysariya': 'switzerland', 'shveysariya': 'switzerland',
+        'swiss': 'switzerland', 'shveysariya': 'switzerland'
+    };
+    
+    // Direct dictionary lookup
+    if (corrections[originalTerm]) {
+        return corrections[originalTerm];
+    }
+    
+    // Try normalized version
+    const normalized = normalizeString(originalTerm);
+    if (normalized !== originalTerm && corrections[normalized]) {
+        return corrections[normalized];
+    }
+    
+    return originalTerm;
+}
+
+// Calculate Levenshtein distance with character substitution weights
+function levenshteinDistance(str1, str2) {
+    const matrix = [];
+    const len1 = str1.length;
+    const len2 = str2.length;
+    
+    // Common keyboard layout for character substitution
+    const keyboardNeighbors = {
+        'q': ['w'], 'w': ['q', 'e'], 'e': ['w', 'r'], 'r': ['e', 't'],
+        't': ['r', 'y'], 'y': ['t', 'u'], 'u': ['y', 'i'], 'i': ['u', 'o'],
+        'o': ['i', 'p'], 'p': ['o'],
+        'a': ['s'], 's': ['a', 'd'], 'd': ['s', 'f'], 'f': ['d', 'g'],
+        'g': ['f', 'h'], 'h': ['g', 'j'], 'j': ['h', 'k'], 'k': ['j', 'l'],
+        'l': ['k'],
+        'z': ['x'], 'x': ['z', 'c'], 'c': ['x', 'v'], 'v': ['c', 'b'],
+        'b': ['v', 'n'], 'n': ['b', 'm'], 'm': ['n']
+    };
+    
+    function isKeyboardNeighbor(char1, char2) {
+        return keyboardNeighbors[char1]?.includes(char2) || 
+               keyboardNeighbors[char2]?.includes(char1);
+    }
+    
+    for (let i = 0; i <= len2; i++) {
+        matrix[i] = [i];
+    }
+    
+    for (let j = 0; j <= len1; j++) {
+        matrix[0][j] = j;
+    }
+    
+    for (let i = 1; i <= len2; i++) {
+        for (let j = 1; j <= len1; j++) {
+            if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
+                matrix[i][j] = matrix[i - 1][j - 1];
+            } else {
+                // Check for keyboard neighbor (lower cost)
+                const substitutionCost = isKeyboardNeighbor(
+                    str2.charAt(i - 1), 
+                    str1.charAt(j - 1)
+                ) ? 0.5 : 1;
+                
+                matrix[i][j] = Math.min(
+                    matrix[i - 1][j - 1] + substitutionCost,
+                    matrix[i][j - 1] + 1,
+                    matrix[i - 1][j] + 1
+                );
+            }
+        }
+    }
+    
+    return matrix[len2][len1];
+}
+
+// Jaro-Winkler similarity for better string matching
+function jaroWinklerSimilarity(str1, str2) {
+    const s1 = str1.toLowerCase();
+    const s2 = str2.toLowerCase();
+    
+    if (s1 === s2) return 1.0;
+    
+    const matchWindow = Math.floor(Math.max(s1.length, s2.length) / 2) - 1;
+    const s1Matches = new Array(s1.length).fill(false);
+    const s2Matches = new Array(s2.length).fill(false);
+    
+    let matches = 0;
+    let transpositions = 0;
+    
+    // Find matches
+    for (let i = 0; i < s1.length; i++) {
+        const start = Math.max(0, i - matchWindow);
+        const end = Math.min(i + matchWindow + 1, s2.length);
+        
+        for (let j = start; j < end; j++) {
+            if (s2Matches[j] || s1[i] !== s2[j]) continue;
+            s1Matches[i] = true;
+            s2Matches[j] = true;
+            matches++;
+            break;
+        }
+    }
+    
+    if (matches === 0) return 0.0;
+    
+    // Find transpositions
+    let k = 0;
+    for (let i = 0; i < s1.length; i++) {
+        if (!s1Matches[i]) continue;
+        while (!s2Matches[k]) k++;
+        if (s1[i] !== s2[k]) transpositions++;
+        k++;
+    }
+    
+    const jaro = (
+        matches / s1.length +
+        matches / s2.length +
+        (matches - transpositions / 2) / matches
+    ) / 3.0;
+    
+    // Winkler modification
+    let prefix = 0;
+    for (let i = 0; i < Math.min(s1.length, s2.length, 4); i++) {
+        if (s1[i] === s2[i]) prefix++;
+        else break;
+    }
+    
+    return jaro + (0.1 * prefix * (1 - jaro));
+}
+
+// Detect and fix common character transpositions and substitutions
+function fixTranspositions(str) {
+    // Common character substitutions (language variations)
+    const substitutions = {
+        'i': ['y', 'ı', 'і'],
+        'y': ['i', 'ı', 'і'],
+        'u': ['o', 'ü', 'ö'],
+        'o': ['u', 'ü', 'ö'],
+        'a': ['e', 'ä', 'å'],
+        'e': ['a', 'ä', 'å']
+    };
+    
+    // Common transposition patterns
+    const transpositionPatterns = [
+        // Double letter corrections
+        { pattern: /([a-z])\1{2,}/g, replace: (match) => match[0] + match[0] }, // "parisss" -> "pariss" -> "paris"
+        // Missing vowel patterns
+        { pattern: /^rom([^a])/, replace: 'roma$1' },
+        { pattern: /^paris([^s])/, replace: 'paris$1' },
+        // Common typos
+        { pattern: /^pariz/, replace: 'paris' },
+        { pattern: /^parys/, replace: 'paris' },
+        { pattern: /^romm/, replace: 'roma' },
+        { pattern: /^dubayy/, replace: 'dubai' },
+        { pattern: /^tokyoo/, replace: 'tokyo' }
+    ];
+    
+    let fixed = str;
+    
+    // Apply transposition patterns
+    for (const { pattern, replace } of transpositionPatterns) {
+        if (typeof replace === 'function') {
+            fixed = fixed.replace(pattern, replace);
+        } else {
+            fixed = fixed.replace(pattern, replace);
+        }
+    }
+    
+    return fixed;
+}
+
+// Normalize string for better matching (handles language variations)
+function normalizeString(str) {
+    return str.toLowerCase()
+        .replace(/[àáâãäå]/g, 'a')
+        .replace(/[èéêë]/g, 'e')
+        .replace(/[ìíîï]/g, 'i')
+        .replace(/[òóôõö]/g, 'o')
+        .replace(/[ùúûü]/g, 'u')
+        .replace(/[ýÿ]/g, 'y')
+        .replace(/[ç]/g, 'c')
+        .replace(/[ñ]/g, 'n')
+        .replace(/[ş]/g, 's')
+        .replace(/[ğ]/g, 'g')
+        .replace(/[ı]/g, 'i')
+        .trim();
+}
+
+// Advanced fuzzy matching with multiple algorithms
+function findBestMatch(searchTerm, possibleMatches) {
+    if (!searchTerm || searchTerm.length < 2) return null;
+    
+    const normalizedTerm = normalizeString(searchTerm);
+    let bestMatch = null;
+    let bestScore = 0;
+    const minScore = 0.6; // Minimum similarity threshold
+    
+    for (const match of possibleMatches) {
+        const normalizedMatch = normalizeString(match);
+        
+        // Exact match
+        if (normalizedTerm === normalizedMatch) {
+            return match;
+        }
+        
+        // Calculate multiple similarity scores
+        const levenshteinDist = levenshteinDistance(normalizedTerm, normalizedMatch);
+        const maxLen = Math.max(normalizedTerm.length, normalizedMatch.length);
+        const levenshteinScore = 1 - (levenshteinDist / maxLen);
+        
+        const jaroWinklerScore = jaroWinklerSimilarity(normalizedTerm, normalizedMatch);
+        
+        // Check if one string contains the other
+        const containsScore = normalizedMatch.includes(normalizedTerm) || 
+                             normalizedTerm.includes(normalizedMatch) ? 0.8 : 0;
+        
+        // Check for common prefix
+        let prefixLength = 0;
+        const minLen = Math.min(normalizedTerm.length, normalizedMatch.length);
+        for (let i = 0; i < minLen; i++) {
+            if (normalizedTerm[i] === normalizedMatch[i]) {
+                prefixLength++;
+            } else {
+                break;
+            }
+        }
+        const prefixScore = prefixLength / Math.max(normalizedTerm.length, normalizedMatch.length);
+        
+        // Weighted combination of scores
+        const combinedScore = (
+            levenshteinScore * 0.3 +
+            jaroWinklerScore * 0.4 +
+            containsScore * 0.2 +
+            prefixScore * 0.1
+        );
+        
+        // Prefer shorter edit distance
+        const lengthPenalty = Math.abs(normalizedTerm.length - normalizedMatch.length) > 3 ? 0.1 : 1;
+        const finalScore = combinedScore * lengthPenalty;
+        
+        if (finalScore > bestScore && finalScore >= minScore) {
+            bestScore = finalScore;
+            bestMatch = match;
+        }
+    }
+    
+    return bestMatch;
+}
+
+// Search functionality for destinations
+function performDestinationSearch(searchQuery) {
+    const destinationCards = document.querySelectorAll('.destination-card');
+    let searchTerm = searchQuery.toLowerCase().trim();
+    
+    // If search is empty, show all cards
+    if (searchTerm === '') {
+        destinationCards.forEach(card => {
+            card.style.display = '';
+        });
+        // Hide no results message
+        const noResultsMsg = document.querySelector('.no-results-message');
+        if (noResultsMsg) {
+            noResultsMsg.style.display = 'none';
+        }
+        return;
+    }
+    
+    // Apply advanced auto-correction
+    let correctedTerm = autoCorrectSearch(searchTerm);
+    
+    // Apply transposition fixes
+    correctedTerm = fixTranspositions(correctedTerm);
+    
+    // If correction was made, update the input field
+    if (correctedTerm !== searchTerm) {
+        const voiceSearchInput = document.getElementById('voiceSearchInput');
+        if (voiceSearchInput) {
+            voiceSearchInput.value = correctedTerm;
+        }
+        searchTerm = correctedTerm.toLowerCase();
+    }
+    
+    // Language mapping for common destinations - organized by destination
+    const destinationMappings = {
+        'paris': {
+            keywords: ['parij', 'paris', 'fransiya', 'france'],
+            matchText: ['parij', 'paris', 'fransiya', 'france']
+        },
+        'roma': {
+            keywords: ['rim', 'roma', 'rome', 'italiya', 'italy'],
+            matchText: ['rim', 'roma', 'rome', 'italiya', 'italy']
+        },
+        'dubai': {
+            keywords: ['dubay', 'dubai', 'baa', 'uae'],
+            matchText: ['dubay', 'dubai', 'baa', 'uae']
+        },
+        'istanbul': {
+            keywords: ['istanbul', 'turkiya', 'turkey'],
+            matchText: ['istanbul', 'turkiya', 'turkey']
+        },
+        'tokyo': {
+            keywords: ['tokio', 'tokyo', 'yaponiya', 'japan'],
+            matchText: ['tokio', 'tokyo', 'yaponiya', 'japan']
+        },
+        'bangkok': {
+            keywords: ['bangkok', 'tailand', 'thailand'],
+            matchText: ['bangkok', 'tailand', 'thailand']
+        },
+        'london': {
+            keywords: ['london', 'buyuk britaniya', 'uk', 'britain'],
+            matchText: ['london', 'buyuk britaniya', 'uk', 'britain']
+        },
+        'baku': {
+            keywords: ['boku', 'baku', 'ozarbayjon', 'azerbaijan'],
+            matchText: ['boku', 'baku', 'ozarbayjon', 'azerbaijan']
+        },
+        'switzerland': {
+            keywords: ['shveysariya', 'switzerland'],
+            matchText: ['shveysariya', 'switzerland']
+        }
+    };
+    
+    // Find which destination group the search term belongs to
+    // Priority: exact match > starts with > contains
+    let matchedDestination = null;
+    let matchType = null; // 'exact', 'starts', 'contains'
+    let matchedKeywords = []; // Track which keywords matched
+    
+    // First, check for exact match (highest priority) - case-insensitive
+    // Special handling for "italiya" to ensure it only matches "roma" destination
+    if (normalizeString(searchTerm) === 'italiya' || normalizeString(searchTerm) === 'italy' || 
+        normalizeString(searchTerm) === 'itali') {
+        matchedDestination = 'roma';
+        matchType = 'exact';
+        matchedKeywords = ['italiya'];
+    } else {
+        for (const [destKey, destData] of Object.entries(destinationMappings)) {
+            const exactMatch = destData.keywords.find(keyword => {
+                return keyword.toLowerCase() === searchTerm || 
+                       normalizeString(keyword) === normalizeString(searchTerm);
+            });
+            if (exactMatch) {
+                matchedDestination = destKey;
+                matchType = 'exact';
+                matchedKeywords = [exactMatch];
+                break;
+            }
+        }
+    }
+    
+    // If no exact match, check for "starts with" match (but only if search term is at least 3 chars)
+    if (!matchedDestination && searchTerm.length >= 3) {
+        for (const [destKey, destData] of Object.entries(destinationMappings)) {
+            // Only check if keyword starts with search term (not the reverse, to avoid false matches)
+            const startsMatch = destData.keywords.find(keyword => keyword.startsWith(searchTerm));
+            if (startsMatch) {
+                matchedDestination = destKey;
+                matchType = 'starts';
+                matchedKeywords = [startsMatch];
+                break;
+            }
+        }
+    }
+    
+    // If still no match, check for contains (but be very strict - minimum 4 chars for substring matching)
+    // AND ensure the search term is not a substring of unrelated words
+    if (!matchedDestination && searchTerm.length >= 4) {
+        // First, check if search term matches any keyword exactly (case-insensitive)
+        for (const [destKey, destData] of Object.entries(destinationMappings)) {
+            const exactKeywordMatch = destData.keywords.find(keyword => {
+                return normalizeString(keyword) === normalizeString(searchTerm);
+            });
+            if (exactKeywordMatch) {
+                matchedDestination = destKey;
+                matchType = 'contains';
+                matchedKeywords = [exactKeywordMatch];
+                break;
+            }
+        }
+        
+        // If no exact keyword match, check for contains (but be very strict)
+        if (!matchedDestination) {
+            for (const [destKey, destData] of Object.entries(destinationMappings)) {
+                // Only match if keyword contains search term (not reverse, to be more precise)
+                // Also check that search term is not just a common substring
+                const containsMatch = destData.keywords.find(keyword => {
+                    const normalizedKeyword = normalizeString(keyword);
+                    const normalizedSearch = normalizeString(searchTerm);
+                    
+                    // Only match if the keyword contains the full search term
+                    // AND the search term is at least 4 characters
+                    // AND it's not a common substring that appears in multiple destinations
+                    if (normalizedKeyword.includes(normalizedSearch) && searchTerm.length >= 4) {
+                        // Check if this search term appears in other destination mappings (avoid false positives)
+                        const appearsInOtherDestinations = Object.entries(destinationMappings).some(([otherKey, otherData]) => {
+                            if (otherKey === destKey) return false;
+                            return otherData.keywords.some(otherKeyword => {
+                                const normalizedOther = normalizeString(otherKeyword);
+                                // Check if the search term appears in other keywords
+                                // But exclude if it's just a common substring like "iya" in both "italiya" and "fransiya"
+                                if (normalizedOther.includes(normalizedSearch)) {
+                                    // If search term is less than 5 chars, be more strict
+                                    if (normalizedSearch.length < 5) {
+                                        // Only match if it's at the start or end of the word, not in the middle
+                                        const startsWith = normalizedOther.startsWith(normalizedSearch);
+                                        const endsWith = normalizedOther.endsWith(normalizedSearch);
+                                        if (!startsWith && !endsWith) {
+                                            return false; // It's in the middle, likely a false positive
+                                        }
+                                    }
+                                    return normalizedOther !== normalizedKeyword;
+                                }
+                                return false;
+                            });
+                        });
+                        
+                        // Only match if it's unique to this destination OR if it's an exact match
+                        // OR if the search term is long enough (>= 5 chars) to avoid substring issues
+                        return (!appearsInOtherDestinations || normalizedKeyword === normalizedSearch) && 
+                               (normalizedSearch.length >= 5 || normalizedKeyword === normalizedSearch);
+                    }
+                    return false;
+                });
+                if (containsMatch) {
+                    matchedDestination = destKey;
+                    matchType = 'contains';
+                    matchedKeywords = [containsMatch];
+                    break;
+                }
+            }
+        }
+    }
+    
+    // If no match found, try fuzzy matching (but be more strict)
+    if (!matchedDestination) {
+        const allKeywords = Object.values(destinationMappings).flatMap(d => d.keywords);
+        const bestMatch = findBestMatch(searchTerm, allKeywords);
+        if (bestMatch) {
+            // Verify the match is good enough and not a false positive
+            const normalizedSearch = normalizeString(searchTerm);
+            const normalizedMatch = normalizeString(bestMatch);
+            
+            // Only accept fuzzy match if similarity is high and it's not ambiguous
+            const similarity = jaroWinklerSimilarity(normalizedSearch, normalizedMatch);
+            if (similarity >= 0.75) { // Higher threshold for fuzzy matching
+                for (const [destKey, destData] of Object.entries(destinationMappings)) {
+                    if (destData.keywords.includes(bestMatch)) {
+                        matchedDestination = destKey;
+                        matchType = 'fuzzy';
+                        matchedKeywords = [bestMatch];
+                        // Update input with corrected term
+                        const voiceSearchInput = document.getElementById('voiceSearchInput');
+                        if (voiceSearchInput) {
+                            voiceSearchInput.value = bestMatch;
+                        }
+                        searchTerm = bestMatch.toLowerCase();
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    
+    let hasMatches = false;
+    
+    destinationCards.forEach(card => {
+        const titleElement = card.querySelector('.destination-title');
+        const descElement = card.querySelector('.destination-desc');
+        
+        if (!titleElement) return;
+        
+        const title = titleElement.textContent.toLowerCase();
+        const description = descElement ? descElement.textContent.toLowerCase() : '';
+        const searchText = title + ' ' + description;
+        
+        let isMatch = false;
+        
+        // If we found a matched destination group, only show cards that belong to it
+        if (matchedDestination) {
+            const destData = destinationMappings[matchedDestination];
+            // Check if card's title/description contains any of the match text for this destination
+            // Use word boundaries or exact matching to avoid false positives
+            isMatch = destData.matchText.some(matchText => {
+                const normalizedMatchText = normalizeString(matchText);
+                const normalizedTitle = normalizeString(title);
+                const normalizedSearchText = normalizeString(searchText);
+                
+                // Exact match in title (highest priority)
+                if (normalizedTitle === normalizedMatchText || 
+                    normalizedTitle.includes(' ' + normalizedMatchText + ',') ||
+                    normalizedTitle.includes(', ' + normalizedMatchText) ||
+                    normalizedTitle.endsWith(' ' + normalizedMatchText)) {
+                    return true;
+                }
+                
+                // Check if match text appears as a word in title or description (with word boundaries)
+                // This prevents "italiya" from matching "fransiya"
+                const escapedMatchText = normalizedMatchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const wordBoundaryRegex = new RegExp('\\b' + escapedMatchText + '\\b', 'i');
+                if (wordBoundaryRegex.test(normalizedTitle) || wordBoundaryRegex.test(normalizedSearchText)) {
+                    return true;
+                }
+                
+                // Fallback: simple contains check (but only if match text is significant and unique)
+                // Only use this if the match text is long enough and not a substring of other destinations
+                // Special case: "italiya" should never match "fransiya"
+                if (normalizedMatchText === 'italiya' || normalizedMatchText === 'italy' || normalizedMatchText === 'itali') {
+                    // For Italy-related terms, only match if title contains "rim", "roma", "rome", "italiya", or "italy"
+                    const italyKeywords = ['rim', 'roma', 'rome', 'italiya', 'italy', 'itali'];
+                    const hasItalyKeyword = italyKeywords.some(keyword => {
+                        const normalizedKeyword = normalizeString(keyword);
+                        return normalizedTitle.includes(normalizedKeyword) || normalizedSearchText.includes(normalizedKeyword);
+                    });
+                    if (hasItalyKeyword) {
+                        return true;
+                    }
+                    return false; // Don't match if it's not Italy-related
+                }
+                
+                if (normalizedMatchText.length >= 5) {
+                    // Check if this match text could match other destinations (avoid false positives)
+                    const couldMatchOthers = Object.entries(destinationMappings).some(([otherKey, otherData]) => {
+                        if (otherKey === matchedDestination) return false;
+                        return otherData.matchText.some(otherMatchText => {
+                            const normalizedOther = normalizeString(otherMatchText);
+                            return normalizedOther.includes(normalizedMatchText) && 
+                                   normalizedOther !== normalizedMatchText;
+                        });
+                    });
+                    
+                    // Only use contains if it won't cause false positives
+                    if (!couldMatchOthers && 
+                        (normalizedTitle.includes(normalizedMatchText) || normalizedSearchText.includes(normalizedMatchText))) {
+                        return true;
+                    }
+                }
+                
+                return false;
+            });
+        } else {
+            // If no destination group matched, do a simple text search
+            isMatch = searchText.includes(searchTerm);
+        }
+        
+        // Show or hide card
+        if (isMatch) {
+            card.style.display = '';
+            hasMatches = true;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+    
+    // Scroll to destinations section
+    const destinationsSection = document.getElementById('destinations');
+    if (destinationsSection && searchTerm) {
+        const header = document.querySelector('.main-header') || document.querySelector('.navigation-section');
+        const headerHeight = header ? header.offsetHeight : 80;
+        
+        // Smooth scroll to destinations
+        setTimeout(() => {
+            destinationsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+    }
+    
+    // Show message if no results
+    if (searchTerm && !hasMatches) {
+        const destinationGrid = document.querySelector('.destination-grid');
+        let noResultsMsg = destinationGrid.querySelector('.no-results-message');
+        
+        if (!noResultsMsg) {
+            noResultsMsg = document.createElement('div');
+            noResultsMsg.className = 'no-results-message';
+            noResultsMsg.style.cssText = 'grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-secondary); font-size: 18px;';
+            noResultsMsg.textContent = 'Hech qanday natija topilmadi. Boshqa qidiruv so\'zini kiriting.';
+            destinationGrid.appendChild(noResultsMsg);
+        }
+        noResultsMsg.style.display = 'block';
+    } else {
+        const noResultsMsg = document.querySelector('.no-results-message');
+        if (noResultsMsg) {
+            noResultsMsg.style.display = 'none';
+        }
+    }
+}
 
 // Search Icon Button Handler
 (function() {
@@ -3881,9 +4544,10 @@ document.addEventListener('DOMContentLoaded', function() {
             if (searchQuery) {
                 // Perform search action
                 console.log('Searching for:', searchQuery);
-                // You can add your search logic here
-                // For example: performSearch(searchQuery);
+                performDestinationSearch(searchQuery);
             } else {
+                // Show all destinations if search is empty
+                performDestinationSearch('');
                 // Focus the input if empty
                 voiceSearchInput.focus();
             }

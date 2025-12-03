@@ -36,10 +36,11 @@
     <title>MVP</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* Contact Section - Light Blue-Grey Gradient Background */
+        /* Contact Section - Adaptive Background */
         .contact-section {
-            background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 50%, #e0f7fa 100%) !important;
+            background: var(--bg-secondary) !important;
             padding: 90px 0;
+            transition: background-color 0.3s ease;
         }
         
         .contact-section .section-header {
@@ -47,11 +48,13 @@
         }
         
         .contact-section .section-title {
-            color: #1f2937;
+            color: var(--text-primary);
+            transition: color 0.3s ease;
         }
         
         .contact-section .section-subtitle {
-            color: #6b7280;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
         }
         
         /* Contact Grid - Two Panels Side by Side */
@@ -66,24 +69,28 @@
         
         /* Left Panel - Contact Info Card */
         .contact-card {
-            background: white !important;
+            background: var(--card-bg) !important;
             border-radius: 20px !important;
             padding: 40px !important;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
-            border: none !important;
+            box-shadow: 0 10px 30px var(--header-shadow) !important;
+            border: 1px solid var(--card-border) !important;
+            transition: all 0.3s ease;
         }
         
         .contact-card h3 {
-            color: #1f2937 !important;
+            color: var(--text-primary) !important;
             font-size: 24px;
             font-weight: 700;
             margin-bottom: 16px;
+            transition: color 0.3s ease;
         }
         
         .contact-card p {
-            color: #4b5563 !important;
+            color: var(--text-secondary) !important;
             line-height: 1.7;
             margin-bottom: 28px;
+            font-size: 15px;
+            transition: color 0.3s ease;
         }
         
         .contact-details {
@@ -101,9 +108,10 @@
         }
         
         .contact-details li .icon {
-            color: #06b6d4;
+            color: var(--accent-primary);
             flex-shrink: 0;
             margin-top: 2px;
+            transition: color 0.3s ease;
         }
         
         .contact-details li .icon svg {
@@ -117,22 +125,41 @@
         
         .contact-details li strong {
             display: block;
-            color: #1f2937 !important;
+            color: var(--text-primary) !important;
             font-weight: 600;
             margin-bottom: 4px;
+            transition: color 0.3s ease;
         }
         
         .contact-details li span:not(.icon) {
-            color: #4b5563 !important;
+            color: var(--text-secondary) !important;
+            transition: color 0.3s ease;
         }
         
         /* Right Panel - Contact Form */
         .contact-form-wrapper {
-            background: white !important;
+            background: var(--card-bg) !important;
             border-radius: 20px !important;
             padding: 40px !important;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
-            border: none !important;
+            box-shadow: 0 10px 30px var(--header-shadow) !important;
+            border: 1px solid var(--card-border) !important;
+            transition: all 0.3s ease;
+        }
+        
+        .contact-section {
+            padding: 90px 0;
+        }
+        
+        .contact-section .section-header {
+            margin-bottom: 50px;
+        }
+        
+        .contact-section .section-title {
+            font-size: 36px;
+        }
+        
+        .contact-section .section-subtitle {
+            font-size: 16px;
         }
         
         .contact-form-new {
@@ -146,29 +173,30 @@
         }
         
         .form-group label {
-            color: #1f2937;
+            color: var(--text-primary);
             font-weight: 600;
             font-size: 14px;
+            transition: color 0.3s ease;
         }
         
         .form-group input,
         .form-group textarea {
             width: 100%;
             padding: 12px 16px;
-            border: 2px solid #e5e7eb;
+            border: 2px solid var(--input-border);
             border-radius: 10px;
             font-size: 15px;
             font-family: inherit;
             transition: all 0.3s;
-            background: white;
-            color: #1f2937;
+            background: var(--input-bg);
+            color: var(--text-primary);
         }
         
         .form-group input:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #06b6d4;
-            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px var(--accent-glow);
         }
         
         .form-group textarea {
@@ -179,8 +207,8 @@
         .submit-btn {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
-            color: white;
+            background: var(--gradient-secondary);
+            color: var(--text-inverse);
             border: none;
             border-radius: 10px;
             font-size: 16px;
@@ -192,20 +220,22 @@
         
         .submit-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(6, 182, 212, 0.3);
+            box-shadow: 0 8px 20px var(--accent-glow);
         }
         
         .submit-btn:disabled {
-            background: #9ca3af;
+            background: var(--text-secondary);
             cursor: not-allowed;
             transform: none;
+            opacity: 0.6;
         }
         
         .contact-status {
             font-size: 14px;
-            color: #06b6d4;
+            color: var(--accent-primary);
             text-align: center;
             margin-top: 8px;
+            transition: color 0.3s ease;
         }
         
         .notification {
@@ -213,11 +243,14 @@
             top: 20px;
             right: 20px;
             padding: 20px 30px;
-            background: white;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
             border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 40px var(--header-shadow);
             display: none;
             z-index: 1000;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
         }
         
         .notification.success {
@@ -233,15 +266,562 @@
         }
         
         /* Responsive Design */
-        @media (max-width: 768px) {
+        /* Tablet */
+        @media (max-width: 1024px) {
             .contact-grid {
-                grid-template-columns: 1fr;
-                gap: 24px;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 24px !important;
             }
             
             .contact-card,
             .contact-form-wrapper {
-                padding: 28px;
+                padding: 32px !important;
+            }
+            
+            .contact-section {
+                padding: 70px 0;
+            }
+            
+            .contact-section .section-title {
+                font-size: 32px;
+            }
+        }
+        
+        /* Mobile and Small Tablets */
+        @media (max-width: 768px) {
+            .contact-grid {
+                grid-template-columns: 1fr !important;
+                gap: 24px !important;
+            }
+            
+            .contact-card,
+            .contact-form-wrapper {
+                padding: 24px !important;
+            }
+            
+            .contact-section {
+                padding: 60px 0;
+            }
+            
+            .contact-section .section-header {
+                margin-bottom: 35px;
+            }
+            
+            .contact-section .section-title {
+                font-size: 28px;
+                margin-bottom: 12px;
+            }
+            
+            .contact-section .section-subtitle {
+                font-size: 15px;
+            }
+            
+            .contact-card h3 {
+                font-size: 20px !important;
+                margin-bottom: 12px;
+            }
+            
+            .contact-card p {
+                font-size: 14px !important;
+                margin-bottom: 20px;
+            }
+            
+            .contact-details {
+                gap: 16px;
+            }
+            
+            .contact-details li {
+                gap: 12px;
+            }
+            
+            .contact-details li .icon svg {
+                width: 20px;
+                height: 20px;
+            }
+            
+            .contact-details li strong {
+                font-size: 14px;
+            }
+            
+            .contact-details li span:not(.icon) {
+                font-size: 13px;
+            }
+            
+            .form-group label {
+                font-size: 13px;
+            }
+            
+            .form-group input,
+            .form-group textarea {
+                padding: 10px 14px;
+                font-size: 14px;
+            }
+            
+            .submit-btn {
+                padding: 12px;
+                font-size: 15px;
+            }
+        }
+        
+        /* Small Mobile */
+        @media (max-width: 480px) {
+            .contact-section {
+                padding: 40px 0;
+            }
+            
+            .contact-section .section-header {
+                margin-bottom: 30px;
+            }
+            
+            .contact-section .section-title {
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+            
+            .contact-section .section-subtitle {
+                font-size: 14px;
+            }
+            
+            .contact-card,
+            .contact-form-wrapper {
+                padding: 20px !important;
+                border-radius: 16px !important;
+            }
+            
+            .contact-card h3 {
+                font-size: 18px !important;
+                margin-bottom: 10px;
+            }
+            
+            .contact-card p {
+                font-size: 13px !important;
+                margin-bottom: 18px;
+            }
+            
+            .contact-details {
+                gap: 14px;
+            }
+            
+            .contact-details li {
+                gap: 10px;
+            }
+            
+            .contact-details li .icon svg {
+                width: 18px;
+                height: 18px;
+            }
+            
+            .contact-details li strong {
+                font-size: 13px;
+            }
+            
+            .contact-details li span:not(.icon) {
+                font-size: 12px;
+            }
+            
+            .form-group {
+                gap: 6px;
+            }
+            
+            .form-group label {
+                font-size: 12px;
+            }
+            
+            .form-group input,
+            .form-group textarea {
+                padding: 10px 12px;
+                font-size: 14px;
+            }
+            
+            .form-group textarea {
+                min-height: 100px;
+            }
+            
+            .submit-btn {
+                padding: 11px;
+                font-size: 14px;
+            }
+        }
+        
+        /* Chatbot Styles */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            font-family: inherit;
+        }
+        
+        .chatbot-window {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 380px;
+            max-width: calc(100vw - 40px);
+            height: 500px;
+            max-height: calc(100vh - 100px);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px var(--header-shadow);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            pointer-events: none;
+        }
+        
+        .chatbot-window.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: all;
+        }
+        
+        .chatbot-header {
+            background: var(--gradient-secondary);
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--card-border);
+        }
+        
+        .chatbot-header-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .chatbot-icon {
+            font-size: 24px;
+        }
+        
+        .chatbot-header-content h4 {
+            margin: 0;
+            color: var(--text-inverse);
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .chatbot-status {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            display: block;
+            margin-top: 2px;
+        }
+        
+        .chatbot-close {
+            background: transparent;
+            border: none;
+            color: var(--text-inverse);
+            font-size: 24px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+        
+        .chatbot-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .chatbot-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: var(--bg-secondary);
+        }
+        
+        .chatbot-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .chatbot-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .chatbot-messages::-webkit-scrollbar-thumb {
+            background: var(--card-border);
+            border-radius: 3px;
+        }
+        
+        .chatbot-message {
+            display: flex;
+            animation: messageSlide 0.3s ease;
+        }
+        
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .chatbot-message.user-message {
+            justify-content: flex-end;
+        }
+        
+        .chatbot-message.bot-message {
+            justify-content: flex-start;
+        }
+        
+        .message-content {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            word-wrap: break-word;
+        }
+        
+        .user-message .message-content {
+            background: var(--gradient-secondary);
+            color: var(--text-inverse);
+            border-bottom-right-radius: 4px;
+        }
+        
+        .bot-message .message-content {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-primary);
+            border-bottom-left-radius: 4px;
+        }
+        
+        .message-content p {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .chatbot-input-area {
+            padding: 16px;
+            border-top: 1px solid var(--card-border);
+            background: var(--card-bg);
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chatbot-input-area input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid var(--input-border);
+            border-radius: 25px;
+            background: var(--input-bg);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+        
+        .chatbot-input-area input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+        
+        .chatbot-send {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--gradient-secondary);
+            border: none;
+            color: var(--text-inverse);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .chatbot-send:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+        
+        .chatbot-send:active {
+            transform: scale(0.95);
+        }
+        
+        .chatbot-toggle {
+            width: auto;
+            min-width: 150px;
+            height: 56px;
+            padding: 0 18px;
+            border-radius: 28px;
+            background: white;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 14px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1),
+                        0 1px 4px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: visible;
+            font-weight: 600;
+            font-size: 15px;
+        }
+        
+        .chatbot-toggle-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d4ff 0%, #088395 50%, #0a4d68 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0, 212, 255, 0.25);
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .chatbot-toggle-icon::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
+            pointer-events: none;
+        }
+        
+        .chatbot-toggle-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: white;
+            stroke-width: 2.5;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .chatbot-toggle-text {
+            color: #1a1a2e;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            transition: color 0.3s;
+            font-size: 15px;
+        }
+        
+        [data-theme="dark"] .chatbot-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+        }
+        
+        [data-theme="dark"] .chatbot-toggle-text {
+            color: var(--text-primary);
+        }
+        
+        .chatbot-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15),
+                        0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chatbot-toggle:hover .chatbot-toggle-icon {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.35);
+        }
+        
+        .chatbot-toggle:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        }
+        
+        .chatbot-toggle:active .chatbot-toggle-icon {
+            transform: scale(0.98);
+        }
+        
+        /* Subtle pulse animation */
+        @keyframes chatbotPulse {
+            0%, 100% {
+                box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1),
+                            0 1px 4px rgba(0, 0, 0, 0.08);
+            }
+            50% {
+                box-shadow: 0 3px 14px rgba(0, 0, 0, 0.12),
+                            0 2px 6px rgba(0, 212, 255, 0.15);
+            }
+        }
+        
+        .chatbot-toggle {
+            animation: chatbotPulse 4s ease-in-out infinite;
+        }
+        
+        .chatbot-toggle:hover {
+            animation: none;
+        }
+        
+        /* Responsive Chatbot */
+        @media (max-width: 768px) {
+            .chatbot-container {
+                bottom: 15px;
+                right: 15px;
+            }
+            
+            .chatbot-window {
+                width: calc(100vw - 30px);
+                height: calc(100vh - 100px);
+                max-height: 500px;
+                bottom: 80px;
+                right: 0;
+            }
+            
+            .chatbot-toggle {
+                min-width: 130px;
+                height: 52px;
+                padding: 0 14px;
+                gap: 12px;
+            }
+            
+            .chatbot-toggle-icon {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .chatbot-toggle-icon svg {
+                width: 18px;
+                height: 18px;
+            }
+            
+            .chatbot-toggle-text {
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .chatbot-window {
+                width: calc(100vw - 20px);
+                height: calc(100vh - 80px);
+                max-height: 450px;
+            }
+            
+            .chatbot-header {
+                padding: 12px 16px;
+            }
+            
+            .chatbot-messages {
+                padding: 16px;
+            }
+            
+            .message-content {
+                max-width: 85%;
+                padding: 10px 14px;
             }
         }
     </style>
@@ -836,13 +1416,6 @@
                                 </div>
                             </li>
                             <li>
-                                <span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
-                                <div>
-                                    <strong data-text="contact_email_label">Email</strong>
-                                    <span data-text="contact_email_value">support@ketmon.uz</span>
-                                </div>
-                            </li>
-                            <li>
                                 <span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
                                 <div>
                                     <strong data-text="contact_address_label">Manzil</strong>
@@ -859,13 +1432,8 @@
                             </div>
                             
                             <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="email" id="email" name="email" required placeholder="you@example.com">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="phone">Telefon</label>
-                                <input type="tel" id="phone" name="phone" placeholder="+998 90 123 45 67">
+                                <label for="phone">Telefon raqami <span style="color: var(--accent-primary);">*</span></label>
+                                <input type="tel" id="phone" name="phone" required placeholder="+998 90 123 45 67">
                             </div>
                             
                             <div class="form-group">
@@ -1321,8 +1889,7 @@
 🔔 YANGI XABAR - KETMON.UZ
 
 👤 Ism: ${data.name}
-📧 Email: ${data.email}
-${data.phone ? `📱 Telefon: ${data.phone}` : ''}
+📱 Telefon: ${data.phone}
 💬 Xabar:
 ${data.message}
 
@@ -1351,11 +1918,10 @@ ${data.message}
                 submitBtn.textContent = 'Yuborilmoqda...';
                 
                 const nameInput = document.getElementById('name');
-                const emailInput = document.getElementById('email');
                 const phoneInput = document.getElementById('phone');
                 const messageInput = document.getElementById('message');
                 
-                if (!nameInput || !emailInput || !messageInput) {
+                if (!nameInput || !phoneInput || !messageInput) {
                     showNotification('❌ Forma elementlari topilmadi', 'error');
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Yuborish';
@@ -1364,13 +1930,12 @@ ${data.message}
                 
                 const formData = {
                     name: nameInput.value.trim(),
-                    email: emailInput.value.trim(),
-                    phone: phoneInput ? phoneInput.value.trim() : '',
+                    phone: phoneInput.value.trim(),
                     message: messageInput.value.trim()
                 };
                 
                 // Validation
-                if (!formData.name || !formData.email || !formData.message) {
+                if (!formData.name || !formData.phone || !formData.message) {
                     showNotification('❌ Iltimos, barcha majburiy maydonlarni to\'ldiring', 'error');
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Yuborish';
@@ -1397,4 +1962,305 @@ ${data.message}
             });
         });
     </script>
+
+    <!-- Chatbot JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatbotContainer = document.getElementById('chatbotContainer');
+            const chatbotWindow = document.getElementById('chatbotWindow');
+            const chatbotToggle = document.getElementById('chatbotToggle');
+            const chatbotClose = document.getElementById('chatbotClose');
+            const chatbotInput = document.getElementById('chatbotInput');
+            const chatbotSend = document.getElementById('chatbotSend');
+            const chatbotMessages = document.getElementById('chatbotMessages');
+
+            // Check if elements exist
+            if (!chatbotContainer || !chatbotWindow || !chatbotToggle || !chatbotClose || 
+                !chatbotInput || !chatbotSend || !chatbotMessages) {
+                console.error('Chatbot elements not found');
+                return;
+            }
+
+            // Chatbot Q&A Database
+            const chatbotResponses = {
+                // Project description
+                'loyiha': {
+                    keywords: ['loyiha', 'nima', 'qiladi', 'qanday', 'nima qiladi', 'loyihangiz', 'ketmon', 'platforma'],
+                    response: 'KETMON - Markaziy Osiyo turizm sohasini inqilob qiluvchi keng qamrovli platforma. Biz sayyohlar va agentliklar uchun asosiy sayohat muammolarini hal qilamiz.\n\n' +
+                    'Bizning platformamiz quyidagi xususiyatlarga ega:\n\n' +
+                    '🏪 **Aggregated Tour Marketplace** - Turli agentliklardan tur paketlarini birlashtiruvchi dinamik marketplace\n\n' +
+                    '🔍 **Effortless Comparison & Booking** - Sana, narx, yo\'nalish, sharhlar va mavjudlik bo\'yicha filtrlash va osongina bron qilish\n\n' +
+                    '💳 **Flexible Payment Options** - TNPL (Travel Now Pay Later) tizimi orqali to\'lovni bo\'lib-bo\'lib to\'lash imkoniyati\n\n' +
+                    '🤖 **Intelligent Recommendations** - AI asosida shaxsiylashtirilgan tur tavsiyalari, foydalanuvchi xohishlari va o\'tmishdagi qidiruvlar asosida\n\n' +
+                    'KETMON Markaziy Osiyoda birinchi yirik onlayn tur agregatori bo\'lib, narxlar va tur takliflarida shaffoflik yaratadi, mahalliy tur agentliklarini raqamli vositalar bilan quvvatlaydi va sayyohlar uchun sifatli turlarni topish va bron qilish vaqtini kamaytiradi.'
+                },
+                'mahsulot': {
+                    keywords: ['mahsulot', 'kimlar', 'uchun', 'mo\'ljallangan', 'auditoriya', 'kim uchun', 'kimga'],
+                    response: 'KETMON mahsuloti ikki asosiy auditoriya uchun yaratilgan:\n\n' +
+                    '👥 **1. Sayyohlar va sayohat qiluvchilar:**\n' +
+                    'Mahsulot sayohat qilishni xohlovchi barcha shaxslar va tashkilotlar uchun yaratilgan, shu jumladan:\n' +
+                    '• Turli narxlar va shaffoflik muammolariga duch kelayotgan sayyohlar\n' +
+                    '• Tur paketlarini solishtirishda qiyinchiliklarga duch kelayotgan shaxslar\n' +
+                    '• Markazlashtirilgan platforma va xavfsiz to\'lov tizimi izlayotgan sayohatchilar\n' +
+                    '• Oilaviy sayohatlar, biznes turlari, guruh turlari va shaxsiy sayohatlar uchun tur paketlari qidirayotganlar\n\n' +
+                    '**Foyda:** KETMON yordamida sayyohlar vaqt va byudjetni tejashadi, shaffof narxlar va TNPL imkoniyatlari orqali sifatli turlarni topish va bron qilish imkoniyatiga ega bo\'lishadi.\n\n' +
+                    '🏢 **2. Tur agentliklari va operatorlar:**\n' +
+                    'Mahsulot quyidagi muammolarga duch kelayotgan agentliklar uchun mo\'ljallangan:\n' +
+                    '• Onlayn mavjudligi yo\'q yoki past raqamlashtirishga ega agentliklar\n' +
+                    '• Mijozlarni jalb qilishda samarasizlik muammolari\n' +
+                    '• Operatsion to\'siqlar va inventar boshqaruvi qiyinchiliklari\n' +
+                    '• Kengroq bozor imkoniyatiga ehtiyoj sezayotgan agentliklar\n\n' +
+                    '**Foyda:** Agentliklar bizning platformamiz yordamida raqamli vositalar va kengroq bozor imkoniyatiga ega bo\'lishadi, 10-15 daqiqada onlayn onboarding, real-vaqt rejimida inventar boshqaruvi va marketing imkoniyatlariga erishishadi.\n\n' +
+                    '📊 **Umumiy ta\'sir:**\n' +
+                    'KETMON O\'zbekiston turizm sohasidagi samaradorlik va ijtimoiy ta\'sir muammolarini hal qiladi, shaffoflik yaratadi, mahalliy agentliklarni quvvatlaydi va mintaqaviy iqtisodiy o\'sishga hissa qo\'shadi.'
+                },
+                'bron': {
+                    keywords: ['bron', 'qilish', 'qanday', 'bron qilish', 'buyurtma'],
+                    response: 'Bron qilish uchun kerakli destinatsiyani toping, "Bron qilish" tugmasini bosing va to\'lov ma\'lumotlarini kiriting. Biz TNPL (To\'lovni bo\'lib-bo\'lib amalga oshirish) tizimini qo\'llab-quvvatlaymiz, bu sizga to\'lovni qismlarga bo\'lib to\'lash imkoniyatini beradi.'
+                },
+                'narx': {
+                    keywords: ['narx', 'narxi', 'qancha', 'narxlar', 'baholash'],
+                    response: 'Narxlar turli agentliklar va paketlarga qarab farq qiladi. Platformamizda barcha narxlarni solishtirib ko\'rishingiz mumkin. Minimal budjet 100 USD dan boshlanadi. AI yordamchi sizning budjetingizga mos paketlarni tavsiya qiladi.'
+                },
+                'agentlik': {
+                    keywords: ['agentlik', 'agentliklar', 'hamkor', 'tasdiqlangan', 'partnyor'],
+                    response: 'KETMON platformasida tasdiqlangan hamkor agentliklar bilan ishlaymiz.\n\n' +
+                    '📋 **Hozirgi holat:**\n' +
+                    '• MVP versiyasi ishga tushirildi\n' +
+                    '• Strategik hamkorliklar (Toshkent, Samarqand, Buxoro)\n' +
+                    '• Agentliklar uchun kutish ro\'yxati qurilmoqda\n\n' +
+                    '🎯 **Rejalashtirilgan:**\n' +
+                    '• 20-30 agentlik (Toshkent, Samarqand, Buxoro)\n' +
+                    '• 10-15 daqiqada tezkor onboarding jarayoni\n' +
+                    '• Real-vaqt rejimida inventar boshqaruvi\n\n' +
+                    'Barcha agentliklar O\'zbekiston Respublikasi Turizm va madaniy meros vazirligi tomonidan litsenziyalangan. Siz agentliklarning litsenziyalarini ko\'rishingiz va ularning turlarini solishtirishingiz mumkin.'
+                },
+                'to\'lov': {
+                    keywords: ['to\'lov', 'to\'lash', 'tnpl', 'qanday', 'to\'lov usullari'],
+                    response: 'Biz TNPL (To\'lovni bo\'lib-bo\'lib amalga oshirish) tizimini qo\'llab-quvvatlaymiz. Bu sizga to\'lovni qismlarga bo\'lib to\'lash imkoniyatini beradi. Karta orqali xavfsiz to\'lov qilishingiz mumkin. Barcha to\'lovlar xavfsiz va shifrlangan.'
+                },
+                'yordam': {
+                    keywords: ['yordam', 'qo\'llab-quvvatlash', 'aloqa', 'bog\'lanish', 'bog\'lanish', 'aloqa qilish'],
+                    response: 'Bizning qo\'llab-quvvatlash jamoamiz 24/7 yordam beradi.\n\n' +
+                    '📱 **Telefon orqali:**\n' +
+                    'Telefon raqami: +998 90 765 43 21\n' +
+                    'Ish vaqti: 24/7\n\n' +
+                    '💬 **Xabar yuborish orqali:**\n' +
+                    'Sahifaning pastki qismidagi "Aloqada bo\'laylik" bo\'limiga o\'ting va quyidagilarni bajaring:\n' +
+                    '1. Ismingizni kiriting\n' +
+                    '2. Telefon raqamingizni kiriting (majburiy)\n' +
+                    '3. Xabaringizni yozing\n' +
+                    '4. "Yuborish" tugmasini bosing\n\n' +
+                    'Biz sizning xabaringizni qabul qilib, 30 daqiqada javob beramiz.\n\n' +
+                    '📍 **Manzil:**\n' +
+                    'Toshkent, Navoiy ko\'chasi 12, KETMON HUB\n\n' +
+                    'Siz shuningdek ushbu chatbot orqali savollaringizga javob olishingiz mumkin.'
+                },
+                'destinatsiya': {
+                    keywords: ['destinatsiya', 'yo\'nalish', 'qayerga', 'mamlakat', 'shahar'],
+                    response: 'Platformamizda dunyoning 40+ manziliga turlar mavjud. Mashhur yo\'nalishlar: Parij, Rim, Dubay, Istanbul, Tokio, Bangkok, London, Boku va boshqalar. Qidiruv funksiyasidan foydalanib, qiziqqan yo\'nalishingizni topishingiz mumkin.'
+                },
+                'ai': {
+                    keywords: ['ai', 'yordamchi', 'tavsiya', 'smart', 'intellektual', 'sun\'iy intellekt'],
+                    response: 'KETMON AI texnologiyalaridan keng foydalanadi:\n\n' +
+                    '🎯 **AI-Powered Tour Recommendations:**\n' +
+                    '• Foydalanuvchi xohishlari va o\'tmishdagi qidiruvlar asosida shaxsiylashtirilgan tavsiyalar\n' +
+                    '• Sayohat trendlari va mashhur yo\'nalishlar\n' +
+                    '• Budjet va mavjudlik cheklovlari\n' +
+                    '• Foydalanuvchi xulq-atvori tahlili\n\n' +
+                    '💰 **Dynamic Pricing Intelligence:**\n' +
+                    '• Real-vaqt narx optimallashtirish\n' +
+                    '• Talab bashorati va inventar boshqaruvi\n' +
+                    '• Raqobatbardosh narxlar tahlili\n\n' +
+                    '🔍 **Intelligent Search & Filtering:**\n' +
+                    '• Semantik qidiruv imkoniyatlari\n' +
+                    '• Kontekstga sezgir filtrlash\n' +
+                    '• Aqlli tur va foydalanuvchi ehtiyojlarini moslashtirish\n\n' +
+                    '💬 **AI-Powered Customer Support:**\n' +
+                    '• 24/7 mijozlar yordami\n' +
+                    '• Chatbot va virtual yordamchilar\n' +
+                    '• Ko\'p tilli qo\'llab-quvvatlash'
+                },
+                'til': {
+                    keywords: ['til', 'language', 'qaysi', 'qo\'llab-quvvatlash', 'tillar'],
+                    response: 'Platformamiz 3 tilda qo\'llab-quvvatlanadi: O\'zbek, Rus va Ingliz tillari. Yuqoridagi til tanlovidan foydalanib, qulay tildagi interfeysni tanlashingiz mumkin.'
+                },
+                'muammo': {
+                    keywords: ['muammo', 'problem', 'qanday', 'yechim', 'yechadi'],
+                    response: 'KETMON quyidagi muammolarni hal qiladi:\n\n' +
+                    '❌ **Muammolar:**\n' +
+                    '• Tur paketlarini solishtirish qiyinligi\n' +
+                    '• Keng tarqalgan narxlar va shaffoflik yo\'qligi\n' +
+                    '• Past raqamlashtirish - ko\'plab agentliklar onlayn mavjud emas\n' +
+                    '• Markazlashtirilgan platforma yo\'qligi\n' +
+                    '• Xavfsiz onlayn to\'lov tizimi yo\'qligi\n\n' +
+                    '✅ **Yechimlar:**\n' +
+                    '• Birlashtirilgan tur marketplace\n' +
+                    '• Osongina solishtirish va bron qilish\n' +
+                    '• TNPL (Travel Now Pay Later) tizimi\n' +
+                    '• AI asosida shaxsiylashtirilgan tavsiyalar\n' +
+                    '• Xavfsiz onlayn to\'lov integratsiyasi\n' +
+                    '• Agentliklar uchun raqamli vositalar'
+                },
+                'roadmap': {
+                    keywords: ['roadmap', 'reja', 'bosqich', 'rivojlanish', 'plani'],
+                    response: 'KETMON rivojlanish bosqichlari:\n\n' +
+                    '✅ **Phase 1: Foundation (Yakunlangan)**\n' +
+                    '• MVP veb-platforma\n' +
+                    '• Asosiy marketplace funksiyalari\n' +
+                    '• Bron va to\'lov integratsiyasi\n\n' +
+                    '🚧 **Phase 2: Enhancement (Joriy - 3-6 oy)**\n' +
+                    '• MVP mobil ilova\n' +
+                    '• Rivojlangan AI integratsiyasi\n' +
+                    '• 20-30 agentlik tarmog\'i\n' +
+                    '• TNPL tizimi integratsiyasi\n\n' +
+                    '📈 **Phase 3: Growth (6-12 oy)**\n' +
+                    '• 10,000 foydalanuvchi va 1,000 bron\n' +
+                    '• Premium analytics va featured listings\n' +
+                    '• Influencer hamkorliklari\n\n' +
+                    '🌍 **Phase 4: Expansion (12-18 oy)**\n' +
+                    '• O\'zbekistonda #1 platforma\n' +
+                    '• 50,000 foydalanuvchi va 5,000 bron\n' +
+                    '• Qozog\'iston, Qirg\'iziston va Tojikistonga kengaytirish'
+                }
+            };
+
+            // Default responses
+            const defaultResponses = [
+                'Kechirasiz, men bu savolga javob bera olmayman. Iltimos, boshqa savol bering yoki biz bilan aloqa qiling.\n\n' +
+                '📱 **Telefon orqali:**\n' +
+                '+998 90 765 43 21\n\n' +
+                '💬 **Xabar yuborish orqali:**\n' +
+                'Sahifaning pastki qismidagi "Aloqada bo\'laylik" bo\'limiga o\'ting:\n' +
+                '1. Ismingizni kiriting\n' +
+                '2. Telefon raqamingizni kiriting\n' +
+                '3. Xabaringizni yozing\n' +
+                '4. "Yuborish" tugmasini bosing\n\n' +
+                'Biz 30 daqiqada javob beramiz.',
+                'Bu savol haqida aniqroq ma\'lumot olish uchun biz bilan bog\'laning:\n\n' +
+                '📱 **Telefon:** +998 90 765 43 21\n\n' +
+                '💬 **Xabar yuborish:**\n' +
+                '"Aloqada bo\'laylik" bo\'limiga o\'ting va forma to\'ldiring. Ism, telefon va xabaringizni kiriting, biz tez orada javob beramiz.',
+                'Men hali bu savolga javob bera olmayman. Iltimos, boshqa savol bering.\n\n' +
+                'Yoki biz bilan aloqa qiling:\n' +
+                '📱 Telefon: +998 90 765 43 21\n' +
+                '💬 "Aloqada bo\'laylik" bo\'limidan xabar yuboring\n\n' +
+                'Siz shuningdek "yordam", "bron", "narx" kabi so\'zlar yozib, ma\'lumot olishingiz mumkin.'
+            ];
+
+            // Toggle chatbot window
+            chatbotToggle.addEventListener('click', function() {
+                chatbotWindow.classList.toggle('active');
+                if (chatbotWindow.classList.contains('active')) {
+                    chatbotInput.focus();
+                }
+            });
+
+            chatbotClose.addEventListener('click', function() {
+                chatbotWindow.classList.remove('active');
+            });
+
+            // Find matching response
+            function findResponse(userMessage) {
+                const lowerMessage = userMessage.toLowerCase().trim();
+                
+                // Check each response category
+                for (const [key, data] of Object.entries(chatbotResponses)) {
+                    for (const keyword of data.keywords) {
+                        if (lowerMessage.includes(keyword)) {
+                            return data.response;
+                        }
+                    }
+                }
+                
+                // Return random default response
+                return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+            }
+
+            // Add message to chat
+            function addMessage(text, isUser) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `chatbot-message ${isUser ? 'user-message' : 'bot-message'}`;
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'message-content';
+                
+                const p = document.createElement('p');
+                p.textContent = text;
+                contentDiv.appendChild(p);
+                messageDiv.appendChild(contentDiv);
+                
+                chatbotMessages.appendChild(messageDiv);
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            }
+
+            // Send message
+            function sendMessage() {
+                const message = chatbotInput.value.trim();
+                if (!message) return;
+                
+                // Add user message
+                addMessage(message, true);
+                chatbotInput.value = '';
+                
+                // Simulate typing delay
+                setTimeout(() => {
+                    const response = findResponse(message);
+                    addMessage(response, false);
+                }, 500);
+            }
+
+            // Event listeners
+            chatbotSend.addEventListener('click', sendMessage);
+            chatbotInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        });
+    </script>
+
+    <!-- Chatbot Widget -->
+    <div class="chatbot-container" id="chatbotContainer">
+        <div class="chatbot-window" id="chatbotWindow">
+            <div class="chatbot-header">
+                <div class="chatbot-header-content">
+                    <span class="chatbot-icon">🤖</span>
+                    <div>
+                        <h4>KETMON Yordamchi</h4>
+                        <span class="chatbot-status">Onlayn</span>
+                    </div>
+                </div>
+                <button class="chatbot-close" id="chatbotClose" aria-label="Yopish">×</button>
+            </div>
+            <div class="chatbot-messages" id="chatbotMessages">
+                <div class="chatbot-message bot-message">
+                    <div class="message-content">
+                        <p>Salom! Men KETMON yordamchisiman. Sizga qanday yordam bera olaman?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="chatbot-input-area">
+                <input type="text" id="chatbotInput" placeholder="Savolingizni yozing..." autocomplete="off">
+                <button class="chatbot-send" id="chatbotSend" aria-label="Yuborish">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <button class="chatbot-toggle" id="chatbotToggle" aria-label="Chatbotni ochish">
+            <div class="chatbot-toggle-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                </svg>
+            </div>
+            <span class="chatbot-toggle-text">ChatBot</span>
+        </button>
+    </div>
+
     </body>
